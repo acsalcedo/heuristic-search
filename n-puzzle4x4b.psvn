@@ -1,0 +1,136 @@
+# n-puzzle 4x4 witch costs
+# vertical moves have twice the cost
+
+DOMAIN tile 16   # define a domain called "tile" consisting of 16 constants
+       b 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15   # these are the constants (b is for the blank)
+
+16    # a state is a vector of length 16
+
+tile tile tile tile tile tile tile tile tile tile tile tile tile tile tile tile
+
+
+# First row - left/right
+
+b X - - - - - - - - - - - - - - =>
+X b - - - - - - - - - - - - - - LABEL LEFT
+X b - - - - - - - - - - - - - - =>
+b X - - - - - - - - - - - - - - LABEL RIGHT
+- b X - - - - - - - - - - - - - =>
+- X b - - - - - - - - - - - - - LABEL LEFT
+- X b - - - - - - - - - - - - - =>
+- b X - - - - - - - - - - - - - LABEL RIGHT
+- - b X - - - - - - - - - - - - =>
+- - X b - - - - - - - - - - - - LABEL LEFT
+- - X b - - - - - - - - - - - - =>
+- - b X - - - - - - - - - - - - LABEL RIGHT
+
+
+# Second row - left/right
+
+- - - - b X - - - - - - - - - - =>
+- - - - X b - - - - - - - - - - LABEL LEFT
+- - - - X b - - - - - - - - - - =>
+- - - - b X - - - - - - - - - - LABEL RIGHT
+- - - - - b X - - - - - - - - - =>
+- - - - - X b - - - - - - - - - LABEL LEFT
+- - - - - X b - - - - - - - - - =>
+- - - - - b X - - - - - - - - - LABEL RIGHT
+- - - - - - b X - - - - - - - - =>
+- - - - - - X b - - - - - - - - LABEL LEFT
+- - - - - - X b - - - - - - - - =>
+- - - - - - b X - - - - - - - - LABEL RIGHT
+
+
+# Third row - left/right
+
+- - - - - - - - b X - - - - - - =>
+- - - - - - - - X b - - - - - - LABEL LEFT
+- - - - - - - - X b - - - - - - =>
+- - - - - - - - b X - - - - - - LABEL RIGHT
+- - - - - - - - - b X - - - - - =>
+- - - - - - - - - X b - - - - - LABEL LEFT
+- - - - - - - - - X b - - - - - =>
+- - - - - - - - - b X - - - - - LABEL RIGHT
+- - - - - - - - - - b X - - - - =>
+- - - - - - - - - - X b - - - - LABEL LEFTX
+- - - - - - - - - - X b - - - - =>
+- - - - - - - - - - b X - - - - LABEL RIGHT
+
+
+# Fourth row - left/right
+
+- - - - - - - - - - - - b X - - =>
+- - - - - - - - - - - - X b - - LABEL LEFT
+- - - - - - - - - - - - X b - - =>
+- - - - - - - - - - - - b X - - LABEL RIGHT
+- - - - - - - - - - - - - b X - =>
+- - - - - - - - - - - - - X b - LABEL LEFT
+- - - - - - - - - - - - - X b - =>
+- - - - - - - - - - - - - b X - LABEL RIGHT
+- - - - - - - - - - - - - - b X =>
+- - - - - - - - - - - - - - X b LABEL LEFT
+- - - - - - - - - - - - - - X b =>
+- - - - - - - - - - - - - - b X LABEL RIGHT
+
+
+# First and second row - up/down
+
+b - - - X - - - - - - - - - - - =>
+X - - - b - - - - - - - - - - - LABEL UP COST 2
+X - - - b - - - - - - - - - - - =>
+b - - - X - - - - - - - - - - - LABEL DOWN COST 2
+- b - - - X - - - - - - - - - - =>
+- X - - - b - - - - - - - - - - LABEL UP COST 2
+- X - - - b - - - - - - - - - - =>
+- b - - - X - - - - - - - - - - LABEL DOWN COST 2
+- - b - - - X - - - - - - - - - =>
+- - X - - - b - - - - - - - - - LABEL UP COST 2
+- - X - - - b - - - - - - - - - =>
+- - b - - - X - - - - - - - - - LABEL DOWN COST 2
+- - - b - - - X - - - - - - - - =>
+- - - X - - - b - - - - - - - - LABEL UP COST 2
+- - - X - - - b - - - - - - - - =>
+- - - b - - - X - - - - - - - - LABEL DOWN COST 2
+
+
+# Second and third row - up/down
+
+- - - - b - - - X - - - - - - - =>
+- - - - X - - - b - - - - - - - LABEL UP COST 2
+- - - - X - - - b - - - - - - - =>
+- - - - b - - - X - - - - - - - LABEL DOWN  COST 2
+- - - - - b - - - X - - - - - - =>
+- - - - - X - - - b - - - - - - LABEL UP COST 2
+- - - - - X - - - b - - - - - - =>
+- - - - - b - - - X - - - - - - LABEL DOWN COST 2
+- - - - - - b - - - X - - - - - =>
+- - - - - - X - - - b - - - - - LABEL UP COST 2
+- - - - - - X - - - b - - - - - =>
+- - - - - - b - - - X - - - - - LABEL DOWN COST 2
+- - - - - - - b - - - X - - - - =>
+- - - - - - - X - - - b - - - - LABEL UP COST 2
+- - - - - - - X - - - b - - - - =>
+- - - - - - - b - - - X - - - - LABEL DOWN COST 2
+
+
+# Third and fourth row - up/down
+
+- - - - - - - - b - - - X - - - =>
+- - - - - - - - X - - - b - - - LABEL UP COST 2
+- - - - - - - - X - - - b - - - =>
+- - - - - - - - b - - - X - - - LABEL DOWN COST 2
+- - - - - - - - - b - - - X - - =>
+- - - - - - - - - X - - - b - - LABEL UP COST 2
+- - - - - - - - - X - - - b - - =>
+- - - - - - - - - b - - - X - - LABEL DOWN COST 2
+- - - - - - - - - - b - - - X - =>
+- - - - - - - - - - X - - - b - LABEL UP COST 2
+- - - - - - - - - - X - - - b - =>
+- - - - - - - - - - b - - - X - LABEL DOWN COST 2
+- - - - - - - - - - - b - - - X =>
+- - - - - - - - - - - X - - - b LABEL UP COST 2
+- - - - - - - - - - - X - - - b =>
+- - - - - - - - - - - b - - - X LABEL DOWN COST 2
+
+
+GOAL b 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15
