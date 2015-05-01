@@ -1,6 +1,6 @@
 CC = gcc
 CXX = g++
-OPT = -g -Wall -O3 -Wno-unused-function -Wno-unused-variable
+OPT = -g -Wall -O3 -Wno-unused-function -Wno-unused-variable -std=c++11
 PSVNOPT = --no_state_map --no_abstraction --no_backwards_moves --history_len=0
 
 psvn2c_core.c:
@@ -18,8 +18,8 @@ psvn2c_abstraction.c:
 
 .PRECIOUS: %.c
 
-%.succ: %.c searchtree.cpp
-	$(CXX) $(OPT) searchtree.cpp -include $< -o $@
+%.succ: %.c searchtree.cpp Node.cpp
+	$(CXX) $(OPT) searchtree.cpp Node.cpp -include $< -o $@
 
 .PHONY : clean
 clean:
