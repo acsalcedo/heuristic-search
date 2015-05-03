@@ -29,7 +29,7 @@ public:
    void extractPath(vector<string> &reversedPath) {
     
       Node *node = this;
-      while (node != nullptr && node->parent != nullptr) {
+      while (node != NULL && node->parent != NULL) {
       
          reversedPath.push_back(node->action);
          node = node->parent;
@@ -38,8 +38,10 @@ public:
    
    static Node *makeRoot(state_t s) {
    
-      return new Node(s,nullptr,"",0,0);
+      return new Node(s,NULL,"",0,0);
    };
    
-   
+   int getDepth() {
+      return this->depth;
+   };
 };

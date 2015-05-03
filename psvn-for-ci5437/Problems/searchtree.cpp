@@ -1,4 +1,3 @@
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <inttypes.h>
@@ -20,7 +19,7 @@ int main( int argc, char **argv ) {
    state_t child;
    ruleid_iterator_t iter; // ruleid_terator_t is the type defined by the PSVN API successor/predecessor iterators.
    int ruleid ; // an iterator returns a number identifying a rule
-   int childCount;
+   int childCount = 0;
     
    std::queue<Node*> queue;
 
@@ -38,41 +37,45 @@ int main( int argc, char **argv ) {
       return 0; 
    }
    
-   int depth = 0;
-   depth++;
    printf("The state you entered is: ");
    print_state(stdout, &state);
    printf("\n");
    int stateNumber = 0;
-   
+   float branchFactor;
    Node *root = Node::makeRoot(state);
    queue.push(root);
-    
-   while (!queue.empty() && depth < 4) {
+   int depth = 0; 
+   int i;
+   while (!queue.empty()) {
+
+      stateNumber = queue.size();
       childCount = 0;
-      Node *newNode = queue.front();
+      
+      // Para cada nodo del nivel actual
+      for (i=0; i<stateNumber; i++) {
 
-      queue.pop();
-      init_fwd_iter(&iter, &(newNode->state));
-       
-      while( (ruleid = next_ruleid(&iter)) >= 0) {
-
+         Node *newNode = queue.front();
+         queue.pop();
+         init_fwd_iter(&iter, &(newNode->state));
+         while( (ruleid = next_ruleid(&iter)) >= 0) {
          apply_fwd_rule(ruleid, &(newNode->state), &child);
          ++childCount;
-         printf("child %d. ",childCount);
-         print_state( stdout, &child );
+         //printf("child %d. ",childCount);
+         //print_state( stdout, &child );
 
-         printf("  %s (cost %d), goal=%d\n",get_fwd_rule_label(ruleid),get_fwd_rule_cost(ruleid),is_goal(&child));
-             
-         stateNumber++;
+         //printf("  %s (cost %d), goal=%d\n",get_fwd_rule_label(ruleid),get_fwd_rule_cost(ruleid),is_goal(&child));
+          
          Node *newChild = newNode->makeNode(child,get_fwd_rule_label(ruleid));
          queue.push(newChild);
-      }
+         }  
+      }  
       
-      std::cout<< "Number of states in depth " << depth << ": " << stateNumber << "\n"; 
+      // Se imprimen los valores del numero de nodos, el nivel y el factor de ramificacion
+      branchFactor = (float) childCount/stateNumber;
+      std::cout<< "depth " << depth << ": " << stateNumber << " " << branchFactor << "\n";
       depth++;
-      stateNumber = 0;
-      
+
+      // Si no tiene hijos
       if (childCount == 0) {
         printf("Your state has no children.\n");
       }   
