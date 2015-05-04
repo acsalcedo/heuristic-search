@@ -21,7 +21,7 @@ int main( int argc, char **argv ) {
    int ruleid ; // an iterator returns a number identifying a rule
    int childCount = 0;
     
-   std::queue<state_t> queue;
+   std::queue<Node*> queue;
 
 // READ A LINE OF INPUT FROM stdin
    printf("Please enter a state followed by ENTER: ");
@@ -42,8 +42,8 @@ int main( int argc, char **argv ) {
    printf("\n");
    int stateNumber = 0;
    float branchFactor;
-   //Node *root = Node::makeRoot(state);
-   queue.push(state);
+   Node *root = Node::makeRoot(state);
+   queue.push(root);
    int depth = 0; 
    int i;
    while (!queue.empty()) {
@@ -54,19 +54,19 @@ int main( int argc, char **argv ) {
       // Para cada nodo del nivel actual
       for (i=0; i<stateNumber; i++) {
 
-         state_t newNode = queue.front();
+         Node *newNode = queue.front();
          queue.pop();
-         init_fwd_iter(&iter, &newNode);
+         init_fwd_iter(&iter, &(newNode->state));
          while( (ruleid = next_ruleid(&iter)) >= 0) {
-         apply_fwd_rule(ruleid, &newNode, &child);
+         apply_fwd_rule(ruleid, &(newNode->state), &child);
          ++childCount;
          //printf("child %d. ",childCount);
          //print_state( stdout, &child );
 
          //printf("  %s (cost %d), goal=%d\n",get_fwd_rule_label(ruleid),get_fwd_rule_cost(ruleid),is_goal(&child));
           
-         //Node *newChild = newNode->makeNode(child,get_fwd_rule_label(ruleid));
-         queue.push(child);
+         Node *newChild = newNode->makeNode(child,get_fwd_rule_label(ruleid));
+         queue.push(newChild);
          }  
       }  
       
