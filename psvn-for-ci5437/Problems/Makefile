@@ -27,8 +27,8 @@ psvn2c_abstraction.c:
 %.stDuplicates: %.c searchTreeWoDuplicates.cpp
 	$(CXX) $(OPT) searchTreeWoDuplicates.cpp -include $< -o $@
 
-%.ucs: %.c ucsDDD.cpp Node.cpp
-	$(CXX) $(OPT) ucsDDD.cpp Node.cpp -include $< -o $@
+%.ucs: %.c ucs.cpp Node.cpp
+	$(CXX) $(OPT) ucs.cpp Node.cpp -include $< -o $@
 
 .PHONY : clean
 clean:
