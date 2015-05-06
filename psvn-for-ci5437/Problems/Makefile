@@ -18,9 +18,18 @@ psvn2c_abstraction.c:
 
 .PRECIOUS: %.c
 
-%.succ: %.c searchtree.cpp Node.cpp
-	$(CXX) $(OPT) searchTreeWoDuplicates.cpp Node.cpp -include $< -o $@
+%.stBFS: %.c searchtree.cpp
+	$(CXX) $(OPT) searchtree.cpp -include $< -o $@
+
+%.stDFS: %.c dfsalternativo.cpp
+	$(CXX) $(OPT) dfsalternativo.cpp -include $< -o $@
+
+%.stDuplicates: %.c searchTreeWoDuplicates.cpp
+	$(CXX) $(OPT) searchTreeWoDuplicates.cpp -include $< -o $@
+
+%.ucs: %.c ucsDDD.cpp Node.cpp
+	$(CXX) $(OPT) ucsDDD.cpp Node.cpp -include $< -o $@
 
 .PHONY : clean
 clean:
-	rm -f *.succ *.o sliding_tile1x3.c psvn2c_core.c psvn2c_state_map.c psvn2c_abstraction.c *~
+	rm -f *.o *.st *.stDuplicates psvn2c_core.c psvn2c_state_map.c psvn2c_abstraction.c *~
