@@ -1,7 +1,7 @@
 CC = gcc
 CXX = g++
 OPT = -g -Wall -O3 -Wno-unused-function -Wno-unused-variable -std=c++11
-PSVNOPT = --no_state_map --no_abstraction --history_len=1
+PSVNOPT =  --no_abstraction --history_len=1
 
 psvn2c_core.c:
 	cp ../psvn2c_core.c ./psvn2c_core.c
@@ -30,6 +30,12 @@ psvn2c_abstraction.c:
 %.ucs: %.c ucs.cpp Node.cpp
 	$(CXX) $(OPT) ucs.cpp Node.cpp -include $< -o $@
 
+%.test: %.c test.cpp 
+	$(CXX) $(OPT) test.cpp -include $< -o $@
+
+%.dfsID: %.c dfsID.cpp 
+	$(CXX) $(OPT) dfsID.cpp -include $< -o $@
+
 .PHONY : clean
 clean:
-	rm -f *.o *.st *.stDuplicates psvn2c_core.c psvn2c_state_map.c psvn2c_abstraction.c *~
+	rm -f *.o *.st *.stDuplicates *.test *.ucs *.stDFS psvn2c_core.c psvn2c_state_map.c psvn2c_abstraction.c *~
