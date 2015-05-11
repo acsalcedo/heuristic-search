@@ -5,68 +5,82 @@
 #include <sys/time.h>
 #include <queue>
 #include <iostream>
+#include "priority_queue.hpp"
+
+#define  MAX_LINE_LENGTH 999 
 
 using namespace std;
 
-uniform-cost-search(state_t state):
-	
-	pair<std::state_t,unsigned int> pair;
-	priority_queue<pair<state_t,unsigned int>, vector<pair<state_t,unsigned int>>, CompareCosts> pq;
+void uniformCostSearch(state_t state) {
 
-	state_map_t *map = new_state_map();
-	state_map_add(map, &state, 0);
-	
-	pair.first = state;
-	pair.second = 0;	
-	pq.push(pair);
+    PriorityQueue<state_t> pq;
+    pq.Add(0,0,state);
 
-	ruleid_iterator_t iter;
-	unsigned int dist;
-	int ruleid;
-	
-	while (!q.empty()) {
-		
-		pair<state_t,unsigned int> statecost;
-		pair<state_t,unsigned int> child;
-		
-		statecost = pq.top();
-		pq.pop();
-		
-		if (is_goal(&statecost.first)) 
-			return statecost.first;
+    state_map_t *map = new_state_map();
+    state_map_add(map,&state,0);
 
-		init_fwd_iter(&iter, &statecost.first);
-         
-         while((ruleid = next_ruleid(&iter)) >= 0) {
-         	
-         	apply_fwd_rule(ruleid, &statecost.first, &child.first);
-         	dist = statecost.second + get_fwd_rule_cost(ruleid);
-         	
-         	int *cost = state_map_get(map, child.first);
+    state_t currentState, child;
+    int * cost;
+    int ruleid, priority, childCost;
+    ruleid_iterator_t iter;
 
-         	if ( cost == NULL)
-         		state_map_add(map, &child, dist);
-         	else if (dist < *cost){
-         		state_map_add(map,&child,dist);
-         		// REPLACEEEEEEEEE RE}
-         	}
+    while (!pq.Empty()) {
 
-	}
+        priority = pq.CurrentPriority();
 
+        currentState = pq.Top();
+        pq.Pop();           
 
+        cost = state_map_get(map,&currentState);
 
+        if (cost != NULL || priority < *cost) {
+
+            /* The state added to map is Gray */
+            state_map_add(map,&currentState,priority);
+
+            if (is_goal(&currentState)) {
+                cout << "Goal found: ";
+                print_state(stdout,&currentState);
+                cout << " Cost: " << priority << endl;
+                return;
+            }           
+
+            init_fwd_iter(&iter,&currentState);
+
+            while((ruleid = next_ruleid(&iter)) >= 0) {
+
+                apply_fwd_rule(ruleid,&currentState,&child);
+                
+                childCost = priority + get_fwd_rule_cost(ruleid);
+                state_map_add(map,&child,childCost);
+                pq.Add(childCost,childCost,child);
+            }           
+        }
+    }
+    cout << "No goal found.\n";
+}
 
 int main( int argc, char **argv ) {
-//READ A LINE OF INPUT FROM stdin
-   printf("Please enter a state followed by ENTER: ");
-   if ( fgets(str, sizeof str, stdin) == NULL ) {
-     printf("Error: empty input line.\n");
-     return 0; 
-  }
 
-//CONVERT THE STRING TO A STATE
-   nchars = read_state( str, &state );
-   if (nchars <= 0) {
-     printf("Error: invalid state entered.\n");
-     return 0; 
-   }
+    char str[MAX_LINE_LENGTH +1] ;
+    ssize_t nchars; 
+    state_t state; // state_t is defined by the PSVN API. It is the type used for individual states.
+    
+    printf("Please enter a state followed by ENTER: ");
+    if ( fgets(str, sizeof str, stdin) == NULL ) {
+        printf("Error: empty input line.\n");
+        return 0; 
+    }
+
+    nchars = read_state( str, &state );
+    if (nchars <= 0) {
+        printf("Error: invalid state entered.\n");
+        return 0; 
+    }
+   
+    printf("The state you entered is: ");
+    print_state(stdout, &state);
+    printf("\n");
+
+    uniformCostSearch(state);
+}
