@@ -9,32 +9,47 @@
 using namespace std;
 
 uniform-cost-search(state_t state):
+	
 	pair<std::state_t,unsigned int> pair;
 	priority_queue<pair<state_t,unsigned int>, vector<pair<state_t,unsigned int>>, CompareCosts> pq;
 
 	state_map_t *map = new_state_map();
 	state_map_add(map, &state, 0);
+	
 	pair.first = state;
-	pair.second = 0;
+	pair.second = 0;	
 	pq.push(pair);
+
 	ruleid_iterator_t iter;
 	unsigned int dist;
 	int ruleid;
+	
 	while (!q.empty()) {
+		
 		pair<state_t,unsigned int> statecost;
 		pair<state_t,unsigned int> child;
+		
 		statecost = pq.top();
 		pq.pop();
+		
 		if (is_goal(&statecost.first)) 
 			return statecost.first;
 
 		init_fwd_iter(&iter, &statecost.first);
          
          while((ruleid = next_ruleid(&iter)) >= 0) {
+         	
          	apply_fwd_rule(ruleid, &statecost.first, &child.first);
          	dist = statecost.second + get_fwd_rule_cost(ruleid);
-         	if (state_map_get(map, child.first) == NULL)
+         	
+         	int *cost = state_map_get(map, child.first);
 
+         	if ( cost == NULL)
+         		state_map_add(map, &child, dist);
+         	else if (dist < *cost){
+         		state_map_add(map,&child,dist);
+         		// REPLACEEEEEEEEE RE}
+         	}
 
 	}
 
