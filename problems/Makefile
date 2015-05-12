@@ -12,6 +12,7 @@ PSVNOPT =  --state_map --no_abstraction --history_len=1
 
 all:
 	make $(NPUZZLE)n-puzzle4x4.ucs
+	make $(NPUZZLE)n-puzzle4x4.bfs
 
 psvn2c_core.c:
 	cp $(PSVN)psvn2c_core.c ./psvn2c_core.c
@@ -61,4 +62,4 @@ psvn2c_abstraction.c:
 
 .PHONY : clean
 clean:
-	rm -f *.o *.st *.stDuplicates *.ucs *.stDFS *.bfs *.dfsID *.c *.stBFS *~
+	rm -f *.o *.st *.stDuplicates *.ucs *.stDFS *.bfs *.dfsID *.c *.stBFS1 *~
