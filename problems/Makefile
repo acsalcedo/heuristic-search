@@ -13,7 +13,7 @@ PSVNOPT =  --state_map --no_abstraction --history_len=1
 all:
 	# make $(NPUZZLE)n-puzzle4x4.ucs
 	# make $(NPUZZLE)n-puzzle4x4.bfs
-	make $(NPUZZLE)n-puzzle4x4.dfucs
+	make $(NPUZZLE)n-puzzle4x4.dfsID
 
 psvn2c_core.c:
 	cp $(PSVN)psvn2c_core.c ./psvn2c_core.c
@@ -52,9 +52,11 @@ psvn2c_abstraction.c:
 	rm ucs.cpp priority_queue.hpp
 
 %.dfsID: %.c
-	cp $(SRC)dfsID.cpp ./dfsID.cpp 
+	cp $(SRC)dfsID.cpp ./dfsID.cpp
+	cp $(SRC)heuristics.hpp ./heuristics.hpp 
+	cp $(PSVN)priority_queue.hpp ./priority_queue.hpp
 	$(CXX) $(OPT) dfsID.cpp -include $< -o $@
-	rm dfsID.cpp
+	rm dfsID.cpp priority_queue.hpp heuristics.hpp 
 
 %.bfs: %.c
 	cp $(SRC)bfs.cpp ./bfs.cpp
