@@ -11,8 +11,9 @@ OPT = -g -Wall -O3 -Wno-unused-function -Wno-unused-variable -std=c++11
 PSVNOPT =  --state_map --no_abstraction --history_len=1
 
 all:
-	make $(NPUZZLE)n-puzzle4x4.ucs
-	make $(NPUZZLE)n-puzzle4x4.bfs
+	# make $(NPUZZLE)n-puzzle4x4.ucs
+	# make $(NPUZZLE)n-puzzle4x4.bfs
+	make $(NPUZZLE)n-puzzle4x4.dfucs
 
 psvn2c_core.c:
 	cp $(PSVN)psvn2c_core.c ./psvn2c_core.c
@@ -59,6 +60,12 @@ psvn2c_abstraction.c:
 	cp $(SRC)bfs.cpp ./bfs.cpp
 	$(CXX) $(OPT) bfs.cpp -include $< -o $@
 	rm bfs.cpp
+
+
+%.dfucs: %.c
+	cp $(SRC)dfucs.cpp ./dfucs.cpp
+	$(CXX) $(OPT) dfucs.cpp -include $< -o $@
+	rm dfucs.cpp
 
 .PHONY : clean
 clean:

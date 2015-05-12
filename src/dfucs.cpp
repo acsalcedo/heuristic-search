@@ -4,34 +4,51 @@
 #include <assert.h>
 #include <sys/time.h>
 #include <iostream>
-#include "priority_queue.hpp"
 #include <limits>
 
 #define  MAX_LINE_LENGTH 999 
 
+state_map_t *map = new_state_map();
+
 using namespace std;
 
-int depthFirstUCS(state_t state, int cost, int hist) {
+pair<state_t*,int> depthFirstUCS(state_t state, int cost, int hist) {
 
+    int ruleid;
+    state_t child;
+    ruleid_iterator_t iter;
 
-	if (is_goal(state))
-		return make_pair(state,cost);
+    int newCost;
+    int *childCost;
 
-	while((ruleid = next_ruleid(&iter)) >= 0 ) {
+    if (is_goal(&state)) {
+        cout << "Goal found: ";
+        print_state(stdout,&state);
+        cout << " Cost: " << cost << endl;
+        return make_pair(&state,cost);
+    }    
 
-    	apply_fwd_rule(ruleid,&state,&child);
+    cout << "hola";
 
-    	if (!fwd_rule_valid_for_history(hist,ruleid))
+    init_fwd_iter(&iter,&state);
+
+    while ((ruleid = next_ruleid(&iter)) >= 0) {
+        
+        apply_fwd_rule(ruleid,&state,&child);
+        
+        if (!fwd_rule_valid_for_history(hist,ruleid))
             continue;
 
-        int newCost = cost+get_fwd_rule_cost(ruleid);
+        childCost = state_map_get(map,&state);
+        newCost = cost + get_fwd_rule_cost(ruleid);
 
-        pair<state*,int> n = depthFirstUCS(child,newCost,next_fwd_history(hist,ruleid));
-
-
-      
-
+        if (childCost == nullptr || newCost < *childCost) {
+            state_map_add(map,&child,newCost);
+            depthFirstUCS(child,newCost,next_fwd_history(hist,ruleid));   
+        }
     }
+
+    return make_pair(nullptr,0);
 }
 
 int main( int argc, char **argv ) {
@@ -57,5 +74,11 @@ int main( int argc, char **argv ) {
     print_state(stdout, &state);
     printf("\n");
 
-    return depthFirstUCS(state,0,init_history);
+    pair<state_t*,int> p = depthFirstUCS(state,0,init_history);
+
+    if (p.first != nullptr)
+        cout << "Cost: " << p.second << endl;
+    // if (p.first == nullptr) {
+    //     cout << "No goal found.\n";
+    // }
 }
