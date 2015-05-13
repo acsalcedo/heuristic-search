@@ -4,7 +4,6 @@
 #include <assert.h>
 #include <sys/time.h>
 #include <iostream>
-#include "priority_queue.hpp"
 #include "heuristics.hpp"
 #include <limits>
 
