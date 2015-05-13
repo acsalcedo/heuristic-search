@@ -65,28 +65,33 @@ public:
 		return arr5x5column[i];
 	};
 
-	int getHeuristic4x4(const char **state[]) {
+	unsigned int getHeuristic4x4(var_t *state) {
 
 	 	//string goal = "B 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15";
-	  	unsigned int heuristic = 0;
-	  	unsigned int num = 0;
-	  	unsigned int manhattan, x = 0, y;
+	  	int heuristic = 0;
+	  	int num = 0;
+	  	int manhattan, x = -1, y;
 	  	for(int i = 0; i < 16; ++i) {
 
-	  		if (state[0][i] == "B")
-		   		num = 0;
-		  	else
-	  			num = stoi(state[0][i],nullptr,10);
+	  		num = (int) state[i]; //stoi(state[0][i],nullptr,10);
 	  		
+	  		// TODO - hay que incluir el blanco?
+
 	  		y = i % 4;
 	  		if (y % 4 == 0)
 	  			x++;
-	  		manhattan = abs(x - getRow4x4(num)) + abs(y - getColumn4x4(num));  		
+	  		
+	  		if (num == 0)
+	  			continue;
+
+	 		manhattan = abs(x - getRow4x4(num)) + abs(y - getColumn4x4(num));  		
+	  		//cout << "x: " << x << " " << x - getRow4x4(num) << " y:  " << y << " " << y - getColumn4x4(num) << " manhattan: " << manhattan << endl;
 	  		heuristic = heuristic + manhattan;
+	  		//cout << manhattan << endl;
 	  	}
 
 	  	//cout << heuristic;
-	    return heuristic;
+	    return (unsigned int) heuristic;
 		
 	};	
 

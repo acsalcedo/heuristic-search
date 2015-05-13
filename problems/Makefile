@@ -13,7 +13,7 @@ PSVNOPT =  --state_map --no_abstraction --history_len=1
 all:
 	# make $(NPUZZLE)n-puzzle4x4.ucs
 	# make $(NPUZZLE)n-puzzle4x4.bfs
-	make $(NPUZZLE)n-puzzle4x4.dfsID
+	make $(NPUZZLE)n-puzzle4x4.ida
 
 psvn2c_core.c:
 	cp $(PSVN)psvn2c_core.c ./psvn2c_core.c
@@ -53,10 +53,8 @@ psvn2c_abstraction.c:
 
 %.dfsID: %.c
 	cp $(SRC)dfsID.cpp ./dfsID.cpp
-	cp $(SRC)heuristics.hpp ./heuristics.hpp 
-	cp $(PSVN)priority_queue.hpp ./priority_queue.hpp
 	$(CXX) $(OPT) dfsID.cpp -include $< -o $@
-	rm dfsID.cpp priority_queue.hpp heuristics.hpp 
+	rm dfsID.cpp 
 
 %.bfs: %.c
 	cp $(SRC)bfs.cpp ./bfs.cpp
@@ -69,6 +67,13 @@ psvn2c_abstraction.c:
 	$(CXX) $(OPT) dfucs.cpp -include $< -o $@
 	rm dfucs.cpp
 
+%.ida: %.c
+	cp $(SRC)ida.cpp ./ida.cpp
+	cp $(SRC)heuristics.hpp ./heuristics.hpp 
+	cp $(PSVN)priority_queue.hpp ./priority_queue.hpp
+	$(CXX) $(OPT) ida.cpp -include $< -o $@
+	rm ida.cpp priority_queue.hpp heuristics.hpp 
+
 .PHONY : clean
 clean:
-	rm -f *.o *.st *.stDuplicates *.ucs *.stDFS *.bfs *.dfsID *.c *.stBFS1 *~
+	rm -f *.o *.st *.stDuplicates *.ucs *.stDFS *.bfs *.dfsID *.ida *.c *.stBFS1 *~

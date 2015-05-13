@@ -4,8 +4,6 @@
 #include <assert.h>
 #include <sys/time.h>
 #include <iostream>
-#include "priority_queue.hpp"
-#include "heuristics.hpp"
 #include <limits>
 
 #define  MAX_LINE_LENGTH 999 
