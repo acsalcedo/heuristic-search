@@ -1,0 +1,6 @@
+Como correr abstractor:
+
+make abstractor
+make pdb ss=n-puzzle/n-puzzle4x4 absname=abs < abs.txt
+
+file.txt es el archivo con las proyecciones y maps
