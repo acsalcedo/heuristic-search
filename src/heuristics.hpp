@@ -68,17 +68,21 @@ public:
 	int getHeuristic4x4(const char **state[]) {
 
 	 	//string goal = "B 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15";
-	  	int heuristic = 0;
-	  	int num = 0;
-
+	  	unsigned int heuristic = 0;
+	  	unsigned int num = 0;
+	  	unsigned int manhattan, x = 0, y;
 	  	for(int i = 0; i < 16; ++i) {
 
 	  		if (state[0][i] == "B")
 		   		num = 0;
 		  	else
 	  			num = stoi(state[0][i],nullptr,10);
-
-	  		heuristic = heuristic + getRow4x4(num) + getColumn4x4(num); // SUBSTRACT ESTA MIERDA DE LA POSICION ACTUAL
+	  		
+	  		y = i % 4;
+	  		if (y % 4 == 0)
+	  			x++;
+	  		manhattan = abs(x - getRow4x4(num)) + abs(y - getColumn4x4(num));  		
+	  		heuristic = heuristic + manhattan;
 	  	}
 
 	  	//cout << heuristic;
