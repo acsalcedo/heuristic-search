@@ -14,7 +14,7 @@ all:
 	# make $(NPUZZLE)n-puzzle4x4.ucs
 	# make $(NPUZZLE)n-puzzle4x4.bfs
 	# make $(NPUZZLE)n-puzzle4x4.ida
-	make $(NPUZZLE)n-puzzle4x4.a
+	make $(NPUZZLE)n-puzzle4x4.dfucs
 
 psvn2c_core.c:
 	cp $(PSVN)psvn2c_core.c ./psvn2c_core.c
@@ -52,10 +52,10 @@ psvn2c_abstraction.c:
 	$(CXX) $(OPT) ucs.cpp -include $< -o $@
 	rm ucs.cpp priority_queue.hpp
 
-%.dfsID: %.c
-	cp $(SRC)dfsID.cpp ./dfsID.cpp
-	$(CXX) $(OPT) dfsID.cpp -include $< -o $@
-	rm dfsID.cpp 
+%.dfid: %.c
+	cp $(SRC)dfid.cpp ./dfid.cpp
+	$(CXX) $(OPT) dfid.cpp -include $< -o $@
+	rm dfid.cpp 
 
 %.bfs: %.c
 	cp $(SRC)bfs.cpp ./bfs.cpp
@@ -83,4 +83,4 @@ psvn2c_abstraction.c:
 
 .PHONY : clean
 clean:
-	rm -f *.o *.a *.st *.stDuplicates *.ucs *.stDFS *.bfs *.dfsID *.ida *.c *.stBFS1 *~
+	rm -f *.o *.a *.st *.stDuplicates *.ucs *.stDFS *.bfs *.dfid *.dfucs *.ida *.c *.stBFS1 *~

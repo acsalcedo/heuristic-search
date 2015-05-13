@@ -8,55 +8,56 @@
 
 #define  MAX_LINE_LENGTH 999 
 
-state_map_t *map = new_state_map();
-
 using namespace std;
 
-pair<state_t*,int> depthFirstUCS(state_t state, int cost, int hist) {
+pair<state_t*, int> boundedDfs(state_t state, int bound, int cost, int hist) {
 
     int ruleid;
     state_t child;
     ruleid_iterator_t iter;
-
-    int newCost;
-    int *childCost;
+    
+    if (cost > bound)
+        return make_pair(nullptr,cost);
 
     if (is_goal(&state)) {
-        cout << "Goal found: ";
-        print_state(stdout,&state);
-        cout << " Cost: " << cost << endl;
-        return make_pair(&state,cost);
-    }    
+        pair<state_t*, int> p2 = make_pair(&state,cost);
+        print_state(stdout,p2.first);
+        return p2;
+    }
 
-    cout << "hola";
+    int t = INT_MAX;
 
     init_fwd_iter(&iter,&state);
+         
+    while((ruleid = next_ruleid(&iter)) >= 0) {
+        apply_fwd_rule(ruleid,&state, &child);
 
-    while ((ruleid = next_ruleid(&iter)) >= 0) {
-        
-        apply_fwd_rule(ruleid,&state,&child);
-        
         if (!fwd_rule_valid_for_history(hist,ruleid))
             continue;
 
-        childCost = state_map_get(map,&state);
-        newCost = cost + get_fwd_rule_cost(ruleid);
+        int newCost = cost+get_fwd_rule_cost(ruleid);
 
-        if (childCost == nullptr || newCost < *childCost) {
-            state_map_add(map,&child,newCost);
-            depthFirstUCS(child,newCost,next_fwd_history(hist,ruleid));   
-        }
+        pair<state_t*, int> n = boundedDfs(child,bound,newCost,next_fwd_history(hist,ruleid));
+        
+        if (n.first != nullptr) 
+            return make_pair(n.first, n.second);
+
+        t = min(t,n.second);
     }
+    return make_pair(nullptr,t);       
 
-    return make_pair(nullptr,0);
 }
 
 int main( int argc, char **argv ) {
 
-
- 	char str[MAX_LINE_LENGTH +1] ;
+    char str[ MAX_LINE_LENGTH +1 ] ;
     ssize_t nchars; 
     state_t state; // state_t is defined by the PSVN API. It is the type used for individual states.
+
+    state_t child;
+    ruleid_iterator_t iter; // ruleid_terator_t is the type defined by the PSVN API successor/predecessor iterators.
+    int ruleid ; // an iterator returns a number identifying a rule
+    int childCount = 0;
     
     printf("Please enter a state followed by ENTER: ");
     if ( fgets(str, sizeof str, stdin) == NULL ) {
@@ -74,11 +75,19 @@ int main( int argc, char **argv ) {
     print_state(stdout, &state);
     printf("\n");
 
-    pair<state_t*,int> p = depthFirstUCS(state,0,init_history);
+    int bound = 0;
 
-    if (p.first != nullptr)
-        cout << "Cost: " << p.second << endl;
-    // if (p.first == nullptr) {
-    //     cout << "No goal found.\n";
-    // }
+    while (true) {
+
+       pair<state_t*, int> p = boundedDfs(state,bound,0,init_history);
+
+       if (p.first != nullptr) {
+           cout << "Cost: " << p.second << "\n";
+           return p.second;
+       }
+
+       bound = p.second;
+       
+    }
+
 }
