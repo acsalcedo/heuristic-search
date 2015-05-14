@@ -8,13 +8,13 @@ TOPSPIN = topspin/
 RUBIKS = rubikscube/
 EXTRA = extra/
 OPT = -g -Wall -O3 -Wno-unused-function -Wno-unused-variable -std=c++11
-PSVNOPT =  --state_map --no_abstraction --history_len=1
+PSVNOPT =  --state_map --history_len=1
 
 all:
 	# make $(NPUZZLE)n-puzzle4x4.ucs
 	# make $(NPUZZLE)n-puzzle4x4.bfs
-	# make $(NPUZZLE)n-puzzle4x4.ida
-	make $(NPUZZLE)n-puzzle4x4.dfucs
+	make $(NPUZZLE)n-puzzle4x4.ida
+	# make $(NPUZZLE)n-puzzle4x4.a
 
 psvn2c_core.c:
 	cp $(PSVN)psvn2c_core.c ./psvn2c_core.c
@@ -81,6 +81,33 @@ psvn2c_abstraction.c:
 	$(CXX) $(OPT) a.cpp -include $< -o $@
 	rm a.cpp priority_queue.hpp heuristics.hpp 
 
+%.distSummary: %.c
+	cp $(PSVN)priority_queue.hpp ./priority_queue.hpp
+	cp $(SRC)distSummary.cpp ./distSummary.cpp
+	$(CXX) $(OPT) distSummary.cpp -include $< -o $@
+	rm -f priority_queue.hpp distSummary.cpp
+
+abstractor: 
+	cp $(PSVN)psvn.hpp ./psvn.hpp
+	cp $(PSVN)psvn.cpp ./psvn.cpp 
+	cp $(SRC)abstractor.cpp ./abstractor.cpp
+	$(CXX) $(OPT) abstractor.cpp psvn.cpp -o $@
+	rm -f psvn.cpp psvn.hpp abstractor.cpp 
+
+.PRECIOUS: $(absname).abst
+.PRECIOUS: $(absname).state_map
+
+.PHONY: pdb
+pdb: abstractor
+	#rm -f $(absname).abst $(absname).c $(absname).distSummary $(absname).dist $(absname).psvn $(absname).state_map
+ifeq ($(strip $(wildcard $(absname).txt)),)
+	./abstractor $(ss).psvn $(absname)
+else
+	./abstractor $(ss).psvn $(absname) < $(absname).txt
+endif
+	make $(absname).distSummary
+	./$(absname).distSummary $(absname).state_map
+
 .PHONY : clean
 clean:
-	rm -f *.o *.a *.st *.stDuplicates *.ucs *.stDFS *.bfs *.dfid *.dfucs *.ida *.c *.stBFS1 *~
+	rm -f *.o *.a *.st *.stDuplicates *.distSummary *.state_map abstractor *.ucs *.stDFS *.bfs *.dfsID *.ida *.c *.stBFS1 psvn2c_abstraction.c *.psvn *.abst absname.state_map absname.c*~
