@@ -52,7 +52,7 @@ void bestFirstSearch(state_t state) {
 
                 apply_fwd_rule(ruleid,&currentState,&child);
 
-                if (h.getHeuristic4x4(child.vars) < UINT_MAX) {                
+                if (h.getHeuristicNpuzzle(4,child.vars) < UINT_MAX) {                
                     childCost = priority + get_fwd_rule_cost(ruleid);
                     state_map_add(map,&child,childCost);
                     pq.Add(childCost,childCost,child);
@@ -87,9 +87,9 @@ int main( int argc, char **argv ) {
     print_state(stdout, &state);
     printf("\n");
 
-    h.initialize4x4();
+    h.initialize(4);
 
-    unsigned int bound = h.getHeuristic4x4(state.vars);
+    unsigned int bound = h.getHeuristicNpuzzle(4,state.vars);
 
     bestFirstSearch(state);           
 
