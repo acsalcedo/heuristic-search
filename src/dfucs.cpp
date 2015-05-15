@@ -78,7 +78,7 @@ int main(int argc,char **argv) {
     string line;
     
     clock_t t;
-    float secs;
+    float secs, nodesSecs;
     int bound;
 
     while(!fileStates.eof()) {
@@ -114,6 +114,12 @@ int main(int argc,char **argv) {
 
         print_state(output,state);
         secs = ((float)t)/CLOCKS_PER_SEC;
-        fprintf(output, ": - %i %lu %f %f \n",p.second,nodes,secs,nodes/secs);
+
+        if (secs == 0)
+            nodesSecs = 0;
+        else
+            nodesSecs = nodes/secs;
+
+        fprintf(output, ": - %i %lu %f %f \n",p.second,nodes,nodesSecs);
     }
 }

@@ -57,7 +57,7 @@ public:
 	            return 0;
 	        }
 
-	        if (strcmp(argv[2],"npuzzle") == 0) {
+	        if (strcmp(argv[2],"npuzzle") == 0 || strcmp(argv[2],"rubiks") == 0) {
 	         
 	            file = fopen("abs2.state_map","r");
 	   
@@ -76,23 +76,25 @@ public:
 	                return 0;
 	            }
 
-	            file = fopen("abs3.state_map","r");
-	            
-	            if (file == nullptr) {
-	                cout << "Error opening map file 3.\n";
-	                return 0;
-	            }
-	            
-	            map3 = read_state_map(file);
-	            fclose(file);
+	            if (strcmp(argv[2],"npuzzle") == 0) {
 
-	            abs3 = read_abstraction_from_file("abs3.abst");
-	 
+		            file = fopen("abs3.state_map","r");
+		            
+		            if (file == nullptr) {
+		                cout << "Error opening map file 3.\n";
+		                return 0;
+		            }
+		            
+		            map3 = read_state_map(file);
+		            fclose(file);
 
-	            if (abs3 == nullptr) {
-	                cout << "Error opening abstraction 3.\n";
-	                return 0;
-	            }
+		            abs3 = read_abstraction_from_file("abs3.abst");
+		 
+		            if (abs3 == nullptr) {
+		                cout << "Error opening abstraction 3.\n";
+		                return 0;
+		            }
+	        	}
 	        }
 
 	    } else {
@@ -203,7 +205,15 @@ public:
 	};	
 
 	int getHeuristicHanoi(state_t *state) {
-		return 0;
+		
+		state_t *stateAbst = new state_t;
+    
+        abstract_state(abs1, state, stateAbst);
+        int heuristic = *state_map_get(map1,stateAbst);
+
+        free(stateAbst);
+
+		return heuristic;
 	};
 
 	int getHeuristicTopspin(state_t *state) {
@@ -211,7 +221,18 @@ public:
 	};
 
 	int getHeuristicRubiks(state_t *state) {
-		return 0; // max abs1 abs2
+		
+		state_t *stateAbst = new state_t;
+    
+        abstract_state(abs1, state, stateAbst);
+        int heuristic1 = *state_map_get(map1,stateAbst);
+        
+        abstract_state(abs2, state, stateAbst);
+        int heuristic2 = *state_map_get(map2,stateAbst);
+
+        free(stateAbst);
+
+		return max(heuristic1, heuristic2);
 	};
 
 	int getHeuristic(state_t *state) {

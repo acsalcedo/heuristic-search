@@ -108,7 +108,7 @@ int main( int argc, char **argv ) {
     string line;
 
     clock_t t;
-    float secs;
+    float secs, nodesSecs;
 
     while(!fileStates.eof()) {
 
@@ -136,7 +136,12 @@ int main( int argc, char **argv ) {
 
         secs = ((float)t)/CLOCKS_PER_SEC;
 
-        fprintf(output,"%f %f \n",secs,nodes/secs);
+        if (secs == 0)
+            nodesSecs = 0;
+        else
+            nodesSecs = nodes/secs;
+
+        fprintf(output,"%f %f \n",secs,nodesSecs);
     }     
 
     h.destroy();
