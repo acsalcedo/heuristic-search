@@ -12,8 +12,6 @@
 
 #define  MAX_LINE_LENGTH 999 
 Heuristics h;
-state_map_t *map1, *map2, *map3;
-abstraction_t *abs1, *abs2, *abs3;
 
 using namespace std;
 
@@ -25,29 +23,15 @@ pair<state_t*,int> boundDFS(state_t *state, int cost, int bound, int hist) {
     
     int ruleid;
     ruleid_iterator_t iter;
-    int childCost = 0;
 
-    abstract_state(abs1, state, stateAbst);
-    int f = cost + *state_map_get(map1,stateAbst);
+    int f = cost + h.getHeuristic(state);
     
-    abstract_state(abs2, state, stateAbst);
-    f += *state_map_get(map2,stateAbst);
-
-    abstract_state(abs3, state, stateAbst);
-    f += *state_map_get(map3,stateAbst);
-    
-    /*(int) h.getHeuristicNpuzzle(4,state->vars)*/
-
-    free(stateAbst);
-
     if (f > bound)
         return make_pair(nullptr,f);
 
-    if (is_goal(state)) {
-        cout << "cost: " << cost << endl;   
+    if (is_goal(state))
         return make_pair(state,cost);
-    }
-
+    
     int t = INT_MAX;
     pair<state_t*,int> n;
 
@@ -69,7 +53,6 @@ pair<state_t*,int> boundDFS(state_t *state, int cost, int bound, int hist) {
        }
 
      t = min(t,n.second);
-
     }
 
     free(child);
@@ -79,8 +62,8 @@ pair<state_t*,int> boundDFS(state_t *state, int cost, int bound, int hist) {
 
 int main(int argc,char **argv) {
 
-    if (argc < 3 ) {
-        cout << "Use: ./<exec> <nameStatesFile> <problem> <typeHeuristic>\n";
+    if (argc < 5 ) {
+        cout << "Use: ./<exec> <nameStatesFile> <problem> <size> <typeHeuristic>\n";
         cout << "problem: npuzzle / rubiks / topspin / hanoi\n";
         cout << "typeHeuristic:\n";
         cout << "if problem to solve is n-puzzle: 0 = manhattan, 1 = pdb.\n";
@@ -97,67 +80,7 @@ int main(int argc,char **argv) {
         return 0;
     }
 
-    if (strcmp(argv[3],"manhattan") != 0) {
-        
-        FILE *file;
-
-        file = fopen("abs1.state_map","r");
-        
-        if (file == nullptr) {
-            cout << "Error opening map file 1.\n";
-            return 0;
-        }
-
-        map1 = read_state_map(file);
-        fclose(file);
-        
-        abs1 = read_abstraction_from_file("abs1.abst");
-      
-        if (abs1 == nullptr) {
-            cout << "Error opening abstraction.\n";
-            return 0;
-        }
-
-        if (strcmp(argv[2],"npuzzle") == 0) {
-         
-            file = fopen("abs2.state_map","r");
-   
-            if (file == nullptr) {
-                cout << "Error opening map file 2.\n";
-                return 0;
-            }
-
-            map2 = read_state_map(file);
-            fclose(file);
-
-            abs2 = read_abstraction_from_file("abs2.abst");
-
-            if (abs2 == nullptr) {
-                cout << "Error opening abstraction 2.\n";
-                return 0;
-            }
-
-            file = fopen("abs3.state_map","r");
-            
-            if (file == nullptr) {
-                cout << "Error opening map file 3.\n";
-                return 0;
-            }
-            
-            map3 = read_state_map(file);
-            fclose(file);
-
-            abs3 = read_abstraction_from_file("abs3.abst");
- 
-
-            if (abs3 == nullptr) {
-                cout << "Error opening abstraction 3.\n";
-                return 0;
-            }
-        }
-    }
-
-    h.initialize(argv[2],4);
+    h.initialize(argv);
 
     state_t *state = new state_t;
 
@@ -176,20 +99,9 @@ int main(int argc,char **argv) {
         print_state(stdout,state);
         printf("\n");
     
-        state_t *stateAbst = new state_t;
+        int bound = h.getHeuristic(state);
 
-        abstract_state(abs1, state, stateAbst);
-        int bound = *state_map_get(map1,stateAbst);
-        
-        abstract_state(abs2, state, stateAbst);
-        bound += *state_map_get(map2,stateAbst);
-
-        abstract_state(abs3, state, stateAbst);
-        bound += *state_map_get(map3,stateAbst);
-
-        free(stateAbst);
-    
-        pair<state_t*,int> p;// = new pair;
+        pair<state_t*,int> p;
 
         while (true) {
             
@@ -202,22 +114,5 @@ int main(int argc,char **argv) {
             bound = p.second;            
         }
     }
-    
-    fileStates.close();
-
-    destroy_abstraction(abs1);
-    destroy_abstraction(abs2);
-    destroy_abstraction(abs3);
-
-    
-
-
-
-
-
-    //h.getHeuristicNpuzzle(4,state->vars);
-
-
-    //free(p);
-
+    fileStates.close(); 
 }

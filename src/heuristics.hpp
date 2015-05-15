@@ -20,20 +20,86 @@ class Heuristics {
 	int arr4x4column[16];
 	int arr5x5row[25];
 	int arr5x5column[25];
+	state_map_t *map1;
+	state_map_t *map2;
+	state_map_t *map3;
+	abstraction_t *abs1;
+	abstraction_t *abs2;
+	abstraction_t *abs3;
+	char * problem;
+	bool manhattan = false;
+	int size;
 
 public:
 	
 	Heuristics() {};
 
-	void initialize(string problem, int problemSize){
+	int initialize(char **argv){
 
-		int i;
+	    if (strcmp(argv[4],"manhattan") != 0) {
+	        
+	        FILE *file;
 
-		if (problem.compare("npuzzle")) {
-			
-			assert(problemSize == 4 || problemSize == 5);
-			
-			if (problemSize == 4)  {
+	        file = fopen("abs1.state_map","r");
+	        
+	        if (file == nullptr) {
+	            cout << "Error opening map file 1.\n";
+	            return 0;
+	        }
+
+	        map1 = read_state_map(file);
+	        fclose(file);
+	        
+	        abs1 = read_abstraction_from_file("abs1.abst");
+	      
+	        if (abs1 == nullptr) {
+	            cout << "Error opening abstraction.\n";
+	            return 0;
+	        }
+
+	        if (strcmp(argv[2],"npuzzle") == 0) {
+	         
+	            file = fopen("abs2.state_map","r");
+	   
+	            if (file == nullptr) {
+	                cout << "Error opening map file 2.\n";
+	                return 0;
+	            }
+
+	            map2 = read_state_map(file);
+	            fclose(file);
+
+	            abs2 = read_abstraction_from_file("abs2.abst");
+
+	            if (abs2 == nullptr) {
+	                cout << "Error opening abstraction 2.\n";
+	                return 0;
+	            }
+
+	            file = fopen("abs3.state_map","r");
+	            
+	            if (file == nullptr) {
+	                cout << "Error opening map file 3.\n";
+	                return 0;
+	            }
+	            
+	            map3 = read_state_map(file);
+	            fclose(file);
+
+	            abs3 = read_abstraction_from_file("abs3.abst");
+	 
+
+	            if (abs3 == nullptr) {
+	                cout << "Error opening abstraction 3.\n";
+	                return 0;
+	            }
+	        }
+	    } else {
+	
+			int i;
+			manhattan = true;
+
+			if (size == 4)  {
 
 				for(i = 0; i < 16; i++) {
 
@@ -47,54 +113,105 @@ public:
 					arr5x5row[i] = div(i,5).quot;
 					arr5x5column[i] = i % 5;
 				} 
-			} 
-		}
+			} 			 
+	    }
+
+	    problem = argv[2];
+	    size = atoi(argv[3]);
+	    return 1;
 	};
 
-	int getRow(int problem, int pos) {
+	int getRow(int pos) {
 
-		assert(problem == 4 || problem == 5);
-
-		if (problem == 4)
+		if (size == 4)
 			return arr4x4row[pos];
 		else
 			return arr5x5row[pos];
 	};
 
-	int getColumn(int problem, int pos) {
+	int getColumn(int pos) {
 
-		assert(problem == 4 || problem == 5);
-
-		if (problem == 4)
+		if (size == 4)
 			return arr4x4column[pos];
 		else
 			return arr5x5column[pos];
 	};
 
-	unsigned int getHeuristicNpuzzle(int problem, var_t *state) {
+	int getHeuristicNpuzzle(state_t *state) {
 		
-		assert(problem == 4 || problem == 5);
-
 		int heuristic = 0;
-	  	int num = 0;
-	  	int manhattan, x = -1, y;
-	  	
-	  	for(int i = 0; i < problem*problem; ++i) {
+		
+		if (manhattan) {
 
-	  		num = (int) state[i];
+			var_t *arr = state->vars;;
+		
+		  	int num = 0;
+		  	int manhattan, x = -1, y;
+		  	
+		  	for(int i = 0; i < size*size; ++i) {
 
-	  		y = i % problem;
-	  		if (y % problem == 0)
-	  			x++;
-	  		
-	  		if (num == 0)
-	  			continue;
+		  		num = (int) arr[i];
 
-	 		manhattan = abs(x - getRow(problem,num)) + abs(y - getColumn(problem,num));  		
-	  		heuristic = heuristic + manhattan;
-	  	}
-	    return (unsigned int) heuristic;
+		  		y = i % size;
+		  		if (y % size == 0)
+		  			x++;
+		  		
+		  		if (num == 0)
+		  			continue;
+
+		 		manhattan = abs(x - getRow(num)) + abs(y - getColumn(num));  		
+		  		heuristic = heuristic + manhattan;
+		  	}
+		    return heuristic;
+		
+		} else {
+
+			state_t *stateAbst = new state_t;
+        
+	        abstract_state(abs1, state, stateAbst);
+	        heuristic = *state_map_get(map1,stateAbst);
+	        
+	        abstract_state(abs2, state, stateAbst);
+	        heuristic += *state_map_get(map2,stateAbst);
+
+	        abstract_state(abs3, state, stateAbst);
+	        heuristic += *state_map_get(map3,stateAbst);
+
+	        //free(stateAbst);
+    
+    		return heuristic;
+		}
 	};	
+
+	int getHeuristicHanoi(state_t *state) {
+		return 0;
+	}
+
+	int getHeuristicTopspin(state_t *state) {
+		return 0;
+	}
+
+	int getHeuristicRubiks(state_t *state) {
+		return 0;
+	}
+
+	int getHeuristic(state_t *state) {
+
+		if (strcmp(problem,"npuzzle") == 0) {
+			return getHeuristicNpuzzle(state);
+
+		} else if (strcmp(problem,"hanoi") == 0) {
+			return getHeuristicHanoi(state);
+		
+		} else if (strcmp(problem,"topspin") == 0) {
+			return getHeuristicTopspin(state);
+		
+		} else if (strcmp(problem,"rubiks") == 0) {
+			return getHeuristicRubiks(state);
+		}
+
+		return -1;
+	}
 
 
 
