@@ -85,17 +85,31 @@ ifeq ($(SIZE),0)
 ## Se ingreso tamaño
 else 
 
+## npuzzle tamaño incorrecto
+ifeq (,$(filter 4 5,$(SIZE)))
+	@echo "El tamaño ingresado no es correcto"
+
+##
+else
 ## npuzzle tamaño 4x4
 ifeq ($(SIZE),4)
 			make $(NPUZZLE)n-puzzle4x4.$(ALG)
+ifneq (,$(filter ida a,$(ALG)))
+	make abstractor
+	make pdb ss=$(NPUZZLE)n-puzzle4x4 absname=abs1 < ../abstractions/n-puzzle4x4/weak/abstraction1.txt
+endif
 
 ## npuzzle tamaño 5x5
 else ifeq ($(SIZE),5)
 			make $(NPUZZLE)n-puzzle5x5.$(ALG)
+ifneq (,$(filter ida a,$(ALG)))
+	make abstractor
+endif
 
-## npuzzle tamaño incorrecto
-else
-	@echo "El tamaño ingresado no es correcto"
+endif
+##
+
+
 endif
 ## endif tamaño del npuzzle
 
@@ -142,7 +156,7 @@ endif
 endif
 ## endif algoritmo ***********************************
 
-hanoi:
+hanoist:
 # Si no se ingreso ningun algoritmo *******************
 ifeq ($(ALG),0)
 		@echo "Ingrese el algoritmo que usará para resolver el problema"
@@ -242,20 +256,10 @@ psvn2c_abstraction.c:
 
 .PRECIOUS: %.c
 
-%.stBFS: %.c
-	cp $(SRC)searchtree.cpp ./searchtree.cpp
-	$(CXX) $(OPT) searchtree.cpp -include $< -o $@
-	rm searchtree.cpp
-
-%.stDFS: %.c
-	cp $(SRC)dfsalternativo.cpp ./dfsalternativo.cpp
-	$(CXX) $(OPT) dfsalternativo.cpp -include $< -o $@
-	rm dfsalternativo.cpp
-
-%.stDuplicates: %.c searchTreeWoDuplicates.cpp
-	cp $(SRC)searchTreeWoDuplicates.cpp ./searchTreeWoDuplicates.cpp
-	$(CXX) $(OPT) searchTreeWoDuplicates.cpp -include $< -o $@
-	rm searchTreeWoDuplicates.cpp
+%.st: %.c
+	cp $(SRC)st.cpp ./st.cpp
+	$(CXX) $(OPT) st.cpp -include $< -o $@
+	rm st.cpp
 
 %.ucs: %.c 
 	cp $(SRC)ucs.cpp ./ucs.cpp
@@ -321,4 +325,4 @@ endif
 
 .PHONY : clean
 clean:
-	rm -f *.o *.a *.st *.stDuplicates *.distSummary *.state_map abstractor *.ucs *.stDFS *.bfs *.dfsID *.ida *.c *.stBFS1 psvn2c_abstraction.c *.psvn *.abst absname.state_map absname.c*~
+	rm -f *.o *.a *.st *.stDuplicates *.distSummary *.st *.state_map abstractor *.ucs *.bfs *.dfsID *.ida *.c psvn2c_abstraction.c *.psvn *.abst absname.state_map absname.c*~
