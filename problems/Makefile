@@ -18,8 +18,8 @@ all:
 	@echo ""
 	@echo "Realice make seguido del problema que desea usar, pasando como parámetros el tamaño del problema y el algoritmo a utilizar"
 	@echo "make <problema> ALG=<algoritmo> SIZE=<tamaño>"
-	@echo "problema =npuzzle/rubiks/topspin/hanoi"
-	@echo "algoritmo =st/ucs/ida/a/dfid/dfucs"
+	@echo "problema =npuzzle|rubiks|topspin|hanoi"
+	@echo "algoritmo =st|ucs|ida|a|dfid|dfucs"
 	@echo ""
 # # Si no se ingreso ningun problema  #########################################
 # ifeq ($(PROB),0)
@@ -79,8 +79,8 @@ all:
 npuzzle:
 # Si no se ingreso ningun algoritmo *******************
 ifeq ($(ALG),0)
-		@echo "Ingrese el algoritmo que usará para resolver el problema"
-		@echo "Opciones posibles: ALG= ucs / ida / a / dfid / dfucs"
+		@echo "Ingrese el algoritmo que usará para resolver Npuzzle"
+		@echo "Opciones posibles: ALG= st | bfs | ucs | ida | a | dfid | dfucs"
 
 ## Se ingreso algoritmo
 else
@@ -88,15 +88,15 @@ else
 
 ## Si no se ingreso un tamaño -----------
 ifeq ($(SIZE),0)
-			@echo "Ingrese el tamaño que usará para el problema escogido"
-
+			@echo "Ingrese el tamaño que usará para el problema Npuzzle"
+			@echo "SIZE=4 (4x4) | 5 (5x5)"
 ## Se ingreso tamaño
 else 
 
 ## npuzzle tamaño incorrecto
 ifeq (,$(filter 4 5,$(SIZE)))
 	@echo "El tamaño ingresado no es correcto"
-
+	@echo "SIZE=4 (4x4) | 5 (5x5)"
 ##
 else
 ## npuzzle tamaño 4x4
@@ -136,8 +136,8 @@ endif
 rubiks:
 # Si no se ingreso ningun algoritmo *******************
 ifeq ($(ALG),0)
-		@echo "Ingrese el algoritmo que usará para resolver el problema"
-		@echo "Opciones posibles: ALG= ucs / ida / a / dfid / dfucs"
+		@echo "Ingrese el algoritmo que usará para resolver Cubos de Rubik"
+		@echo "Opciones posibles: ALG= st|bfs|ucs|ida|a|dfid|dfucs"
 
 ## Se ingreso algoritmo
 else
@@ -145,8 +145,8 @@ else
 
 ## Si no se ingreso un tamaño -----------
 ifeq ($(SIZE),0)
-			@echo "Ingrese el tamaño que usará para el problema escogido"
-
+			@echo "Ingrese el tamaño que usará para el problema Cubos de Rubik"
+			@echo "SIZE=2 (2x2x2)| 3 (3x3x3)"
 ## Se ingreso tamaño
 else 
 
@@ -190,8 +190,8 @@ endif
 hanoi:
 # Si no se ingreso ningun algoritmo *******************
 ifeq ($(ALG),0)
-		@echo "Ingrese el algoritmo que usará para resolver el problema"
-		@echo "Opciones posibles: ALG= ucs / ida / a / dfid / dfucs"
+		@echo "Ingrese el algoritmo que usará para resolver Torres de Hanoi"
+		@echo "Opciones posibles: ALG=st | bfs | ucs | ida | a | dfid | dfucs"
 
 ## Se ingreso algoritmo
 else
@@ -199,8 +199,8 @@ else
 
 ## Si no se ingreso un tamaño -----------
 ifeq ($(SIZE),0)
-			@echo "Ingrese el tamaño que usará para el problema escogido"
-
+			@echo "Ingrese el tamaño que usará para el problema Torres de Hanoi"
+			@echo "SIZE=12 (4p 12d)| 14 (4p 14d)|16 (4p 16d)| 18(4p 18d)"
 ## Se ingreso tamaño
 else 
 
@@ -266,7 +266,7 @@ endif
 topspin:
 ifeq ($(ALG),0)
 		@echo "Ingrese el algoritmo que usará para resolver el problema"
-		@echo "Opciones posibles: ALG= ucs / ida / a / dfid / dfucs"
+		@echo "Opciones posibles: ALG= st /bfs /ucs / ida / a / dfid / dfucs"
 
 ## Se ingreso algoritmo
 else
