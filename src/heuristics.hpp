@@ -25,26 +25,30 @@ public:
 	
 	Heuristics() {};
 
-	void initialize(int problem){
+	void initialize(string problem, int problemSize){
 
-		assert(problem == 4 || problem == 5);
 		int i;
 
-		if (problem == 4)  {
+		if (problem.compare("npuzzle")) {
+			
+			assert(problemSize == 4 || problemSize == 5);
+			
+			if (problemSize == 4)  {
 
-			for(i = 0; i < 16; i++) {
+				for(i = 0; i < 16; i++) {
 
-				arr4x4row[i] = div(i,4).quot;
-				arr4x4column[i] = i % 4;
-			}
-		} else {
+					arr4x4row[i] = div(i,4).quot;
+					arr4x4column[i] = i % 4;
+				}
+			} else {
 
-			for(i = 0; i < 25; i++) {
+				for(i = 0; i < 25; i++) {
 
-				arr5x5row[i] = div(i,5).quot;
-				arr5x5column[i] = i % 5;
+					arr5x5row[i] = div(i,5).quot;
+					arr5x5column[i] = i % 5;
+				} 
 			} 
-		} 
+		}
 	};
 
 	int getRow(int problem, int pos) {
