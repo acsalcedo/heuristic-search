@@ -4,6 +4,8 @@
 #include <assert.h>
 #include <sys/time.h>
 #include <iostream>
+#include <fstream>
+#include <string>
 #include <queue>
 #include <limits>
 
@@ -11,35 +13,37 @@
 
 using namespace std;
 
-void breadthFirstSearch (state_t state) {
+void breadthFirstSearch (state_t *state) {
 
-    state_t currentState, child;
+    state_t currentState;// = new state_t;
+    state_t child;// = new state_t;
     ruleid_iterator_t iter; 
     int ruleid;
 
     queue<state_t> q;
     state_map_t *map = new_state_map();
 
-    q.push(state);
-    state_map_add(map,&state,0);
+    q.push(*state);
+    state_map_add(map,state,0);
 
-    int *cost, *childCost;
+    int cost;
 
     while (!q.empty()) {
 
         currentState = q.front();
         q.pop();
         
-        cost = state_map_get(map,&currentState);
+        cost = *state_map_get(map,&currentState);
 
         if (is_goal(&currentState)) {
-            cout << "Goal found: ";
-            print_state(stdout,&currentState);
-            cout << " Cost: " << *cost << endl;
+            cout << "Goal found with cost: " << cost << endl;
+            destroy_state_map(map);
             return;
         }
 
         init_fwd_iter(&iter,&currentState);
+
+        int *childCost;
 
         while((ruleid = next_ruleid(&iter)) >= 0 ) {
 
@@ -47,39 +51,59 @@ void breadthFirstSearch (state_t state) {
 
             childCost = state_map_get(map,&child);
 
-            if (childCost == nullptr) {
-                
-                state_map_add(map,&child,*cost + get_fwd_rule_cost(ruleid));                
+            if (childCost == nullptr) {   
+
+                int newCost = cost;
+
+                newCost += get_fwd_rule_cost(ruleid);
+
+                state_map_add(map,&child,newCost);               
                 q.push(child);
             }            
         }
     }
+    destroy_state_map(map);
     cout << "No goal found.\n";
 }
 
-int main( int argc, char **argv ) {
+int main(int argc,char **argv) { 
 
-    char str[MAX_LINE_LENGTH +1] ;
-    ssize_t nchars; 
-    state_t state; // state_t is defined by the PSVN API. It is the type used for individual states.
+    if (argc < 2) {
+        cout << "Use: ./<exec>.bfs <nameStatesFile>\n";
+        return 0;
+    }
+
+    ifstream fileStates;
+    fileStates.open(argv[1]);
+
+    if (!fileStates.is_open()) {
+        cout << "Error opening file containing states.\n";
+        return 0;
+    }
+
+    state_t *state = new state_t; 
+    string line;
     
-    printf("Please enter a state followed by ENTER: ");
-    if ( fgets(str, sizeof str, stdin) == NULL ) {
-        printf("Error: empty input line.\n");
-        return 0; 
-    }
+    while(!fileStates.eof()) {
 
-    nchars = read_state( str, &state );
-    if (nchars <= 0) {
-        printf("Error: invalid state entered.\n");
-        return 0; 
-    }
-   
-    printf("The state you entered is: ");
-    print_state(stdout, &state);
-    printf("\n");
+        getline(fileStates,line);
 
-    breadthFirstSearch(state);
+        if (line == "")
+            continue;
+
+        if (read_state(line.c_str(),state) <= 0) {
+            printf("Error: invalid state entered.\n");
+            return 0; 
+        }
+
+        printf("Initial state: ");
+        print_state(stdout,state);
+
+        breadthFirstSearch(state);
+    }
+    
+
+    //free(state);
 }
 
 
