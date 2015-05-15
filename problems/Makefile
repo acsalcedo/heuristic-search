@@ -3,18 +3,229 @@ CXX = g++
 SRC = ../src/
 PSVN = ../psvn/
 NPUZZLE = n-puzzle/
-HANOI = hanoi/
-TOPSPIN = topspin/
+HANOI = hanoitowers/
+TOPSPIN = top-spin/
 RUBIKS = rubikscube/
 EXTRA = extra/
 OPT = -g -Wall -O3 -Wno-unused-function -Wno-unused-variable -std=c++11
 PSVNOPT =  --state_map --history_len=1
-
+PROB = 0
+ROUTE = 0
+ALG = 0
+SIZE = 0
 all:
-	# make $(NPUZZLE)n-puzzle4x4.ucs
-	# make $(NPUZZLE)n-puzzle4x4.bfs
-	make $(NPUZZLE)n-puzzle4x4.ida
-	# make $(NPUZZLE)n-puzzle4x4.a
+
+# Si no se ingreso ningun problema  #########################################
+ifeq ($(PROB),0)
+	@echo "Ingrese el problema que desea resolver"
+	@echo "Opciones posibles: PROB=npuzzle / hanoi / rubiks / topspin"
+
+## Se ingreso problemas
+else
+
+# Si no se ingreso ningun algoritmo *******************
+ifeq ($(ALG),0)
+		@echo "Ingrese el algoritmo que usará para resolver el problema"
+		@echo "Opciones posibles: ALG= ucs / ida / a / dfid / dfucs"
+
+## Se ingreso algoritmo
+else
+
+
+## Si no se ingreso un tamaño -----------
+ifeq ($(SIZE),0)
+			@echo "Ingrese el tamaño que usará para el problema escogido"
+
+## Se ingreso tamaño
+else 
+
+## Si el problema escogido fue npuzzle
+ifeq ($(PROB),npuzzle)
+
+## npuzzle tamaño 4x4
+ifeq ($(SIZE),4)
+			make $(NPUZZLE)n-puzzle4x4.$(ALG)
+
+## npuzzle tamaño 5x5
+else ifeq ($(SIZE),5)
+			make $(NPUZZLE)n-puzzle5x5.$(ALG)
+
+## npuzzle tamaño incorrecto
+else
+	@echo "El tamaño ingresado no es correcto"
+endif
+## endif tamaño del npuzzle
+
+endif
+## endif npuzzle 
+
+endif
+## endif tamaño ----------------------------
+
+endif
+## endif algoritmo ***********************************
+
+endif
+###endif problema  ############################################################
+
+npuzzle:
+# Si no se ingreso ningun algoritmo *******************
+ifeq ($(ALG),0)
+		@echo "Ingrese el algoritmo que usará para resolver el problema"
+		@echo "Opciones posibles: ALG= ucs / ida / a / dfid / dfucs"
+
+## Se ingreso algoritmo
+else
+
+
+## Si no se ingreso un tamaño -----------
+ifeq ($(SIZE),0)
+			@echo "Ingrese el tamaño que usará para el problema escogido"
+
+## Se ingreso tamaño
+else 
+
+## npuzzle tamaño 4x4
+ifeq ($(SIZE),4)
+			make $(NPUZZLE)n-puzzle4x4.$(ALG)
+
+## npuzzle tamaño 5x5
+else ifeq ($(SIZE),5)
+			make $(NPUZZLE)n-puzzle5x5.$(ALG)
+
+## npuzzle tamaño incorrecto
+else
+	@echo "El tamaño ingresado no es correcto"
+endif
+## endif tamaño del npuzzle
+
+endif
+## endif tamaño ----------------------------
+
+endif
+## endif algoritmo ***********************************
+
+rubiks:
+# Si no se ingreso ningun algoritmo *******************
+ifeq ($(ALG),0)
+		@echo "Ingrese el algoritmo que usará para resolver el problema"
+		@echo "Opciones posibles: ALG= ucs / ida / a / dfid / dfucs"
+
+## Se ingreso algoritmo
+else
+
+
+## Si no se ingreso un tamaño -----------
+ifeq ($(SIZE),0)
+			@echo "Ingrese el tamaño que usará para el problema escogido"
+
+## Se ingreso tamaño
+else 
+
+## rubiks cube tamaño 2x2x2
+ifeq ($(SIZE),2)
+			make $(RUBIKS)rubikscube2x2.$(ALG)
+
+## rubiks cube tamaño 3x3x3
+else ifeq ($(SIZE),3)
+			make $(RUBIKS)rubikscube3x3.$(ALG)
+
+## rubiks cube tamaño incorrecto
+else
+	@echo "El tamaño ingresado no es correcto"
+endif
+## endif tamaño del rubiks cube
+
+endif
+## endif tamaño ----------------------------
+
+endif
+## endif algoritmo ***********************************
+
+hanoi:
+# Si no se ingreso ningun algoritmo *******************
+ifeq ($(ALG),0)
+		@echo "Ingrese el algoritmo que usará para resolver el problema"
+		@echo "Opciones posibles: ALG= ucs / ida / a / dfid / dfucs"
+
+## Se ingreso algoritmo
+else
+
+
+## Si no se ingreso un tamaño -----------
+ifeq ($(SIZE),0)
+			@echo "Ingrese el tamaño que usará para el problema escogido"
+
+## Se ingreso tamaño
+else 
+
+## Torres de Hanoi
+ifeq ($(SIZE),12)
+			make $(HANOI)towersofhanoi4-12.$(ALG)
+
+## rubiks cube tamaño 3x3x3
+else ifeq ($(SIZE),14)
+			make $(HANOI)towersofhanoi4-14.$(ALG)
+
+else ifeq ($(SIZE),16)
+			make $(HANOI)towersofhanoi4-16.$(ALG)
+
+else ifeq ($(SIZE),18)
+			make $(HANOI)towersofhanoi4-18.$(ALG)
+
+## rubiks cube tamaño incorrecto
+else
+	@echo "El tamaño ingresado no es correcto"
+endif
+## endif tamaño del rubiks cube
+
+endif
+## endif tamaño ----------------------------
+
+endif
+## endif algoritmo ***********************************
+
+topspin:
+ifeq ($(ALG),0)
+		@echo "Ingrese el algoritmo que usará para resolver el problema"
+		@echo "Opciones posibles: ALG= ucs / ida / a / dfid / dfucs"
+
+## Se ingreso algoritmo
+else
+
+
+## Si no se ingreso un tamaño -----------
+ifeq ($(SIZE),0)
+			@echo "Ingrese el tamaño que usará para el problema TopSpin"
+
+## Se ingreso tamaño
+else 
+
+## TopSpin 12
+ifeq ($(SIZE),12)
+			make $(TOPSPIN)topspin12-4.$(ALG)
+
+## TopSpin 14
+else ifeq ($(SIZE),14)
+			make $(TOPSPIN)topspin14-4.$(ALG)
+
+else ifeq ($(SIZE),16)
+			make $(TOPSPIN)topspin16-4.$(ALG)
+
+else ifeq ($(SIZE),17)
+			make $(TOPSPIN)topspin17-4.$(ALG)
+
+## rubiks cube tamaño incorrecto
+else
+	@echo "El tamaño ingresado no es correcto"
+endif
+## endif tamaño del rubiks cube
+
+endif
+## endif tamaño ----------------------------
+
+endif
+## endif algoritmo ***********************************
 
 psvn2c_core.c:
 	cp $(PSVN)psvn2c_core.c ./psvn2c_core.c
