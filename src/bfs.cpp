@@ -8,15 +8,19 @@
 #include <string>
 #include <queue>
 #include <limits>
+#include <time.h>
 
 #define  MAX_LINE_LENGTH 999 
+
+FILE *output;
+unsigned long int nodes = 0;
 
 using namespace std;
 
 void breadthFirstSearch (state_t *state) {
 
-    state_t currentState;// = new state_t;
-    state_t child;// = new state_t;
+    state_t currentState;
+    state_t child;
     ruleid_iterator_t iter; 
     int ruleid;
 
@@ -33,10 +37,12 @@ void breadthFirstSearch (state_t *state) {
         currentState = q.front();
         q.pop();
         
+        nodes++;
+
         cost = *state_map_get(map,&currentState);
 
         if (is_goal(&currentState)) {
-            cout << "Goal found with cost: " << cost << endl;
+            fprintf(output, ": - %i %lu ", cost, nodes);
             destroy_state_map(map);
             return;
         }
@@ -68,8 +74,8 @@ void breadthFirstSearch (state_t *state) {
 
 int main(int argc,char **argv) { 
 
-    if (argc < 2) {
-        cout << "Use: ./<exec>.bfs <nameStatesFile>\n";
+    if (argc < 3) {
+        cout << "Use: ./<exec>.bfs <nameStatesFile> <outputFile>\n";
         return 0;
     }
 
@@ -81,10 +87,22 @@ int main(int argc,char **argv) {
         return 0;
     }
 
+    output = fopen(argv[2],"w");
+    
+    if (output == nullptr) {
+        cout << "Error opening output file.\n";
+        return 0;
+    }
+
     state_t *state = new state_t; 
     string line;
     
+    clock_t t;
+    float secs;
+
     while(!fileStates.eof()) {
+
+        nodes = 0;
 
         getline(fileStates,line);
 
@@ -96,14 +114,16 @@ int main(int argc,char **argv) {
             return 0; 
         }
 
-        printf("Initial state: ");
-        print_state(stdout,state);
+        print_state(output,state);
 
+        t = clock();
         breadthFirstSearch(state);
-    }
-    
+        t = clock() - t;
 
-    //free(state);
+        secs = ((float)t)/CLOCKS_PER_SEC;
+
+        fprintf(output,"%f %f\n", secs, nodes/secs);
+    }
 }
 
 

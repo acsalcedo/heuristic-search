@@ -5,19 +5,25 @@
 #include <sys/time.h>
 #include <queue>
 #include <iostream>
+#include <fstream>
+#include <string>
 #include "priority_queue.hpp"
+#include <time.h>
 
 #define  MAX_LINE_LENGTH 999 
 
+FILE *output;
+unsigned long int nodes = 0;
+
 using namespace std;
 
-void uniformCostSearch(state_t state) {
+void uniformCostSearch(state_t *state) {
 
     PriorityQueue<state_t> pq;
-    pq.Add(0,0,state);
+    pq.Add(0,0,*state);
 
     state_map_t *map = new_state_map();
-    state_map_add(map,&state,0);
+    state_map_add(map,state,0);
 
     state_t currentState, child;
     int * cost;
@@ -31,17 +37,18 @@ void uniformCostSearch(state_t state) {
         currentState = pq.Top();
         pq.Pop();           
 
+        nodes++;
+        
         cost = state_map_get(map,&currentState);
 
-        if (cost != NULL || priority < *cost) {
+        if (cost == nullptr || priority <= *cost) {
 
             /* The state added to map is Gray */
             state_map_add(map,&currentState,priority);
 
             if (is_goal(&currentState)) {
-                cout << "Goal found: ";
-                print_state(stdout,&currentState);
-                cout << " Cost: " << priority << endl;
+                fprintf(output, ": - %i %lu ", priority, nodes);
+                destroy_state_map(map);
                 return;
             }           
 
@@ -57,30 +64,61 @@ void uniformCostSearch(state_t state) {
             }           
         }
     }
+    destroy_state_map(map);
     cout << "No goal found.\n";
 }
 
 int main( int argc, char **argv ) {
 
-    char str[MAX_LINE_LENGTH +1] ;
-    ssize_t nchars; 
-    state_t state; // state_t is defined by the PSVN API. It is the type used for individual states.
+    if (argc < 3) {
+        cout << "Use: ./<exec>.ucs <nameStatesFile> <outputFile>\n";
+        return 0;
+    }
+
+    ifstream fileStates;
+    fileStates.open(argv[1]);
+
+    if (!fileStates.is_open()) {
+        cout << "Error opening file containing states.\n";
+        return 0;
+    }
+
+    output = fopen(argv[2],"w");
     
-    printf("Please enter a state followed by ENTER: ");
-    if ( fgets(str, sizeof str, stdin) == NULL ) {
-        printf("Error: empty input line.\n");
-        return 0; 
+    if (output == nullptr) {
+        cout << "Error opening output file.\n";
+        return 0;
     }
 
-    nchars = read_state( str, &state );
-    if (nchars <= 0) {
-        printf("Error: invalid state entered.\n");
-        return 0; 
-    }
-   
-    printf("The state you entered is: ");
-    print_state(stdout, &state);
-    printf("\n");
+    state_t *state = new state_t; 
+    string line;
+    
+    clock_t t;
+    float secs;
 
-    uniformCostSearch(state);
+    while(!fileStates.eof()) {
+
+        nodes = 0;
+
+        getline(fileStates,line);
+
+        if (line == "")
+            continue;
+
+        if (read_state(line.c_str(),state) <= 0) {
+            printf("Error: invalid state entered.\n");
+            return 0; 
+        }
+
+        print_state(output,state);
+
+        t = clock();
+        uniformCostSearch(state);
+        t = clock() - t;
+
+        secs = ((float)t)/CLOCKS_PER_SEC;
+
+        fprintf(output,"%f %f\n", secs, nodes/secs);
+    }
+
 }

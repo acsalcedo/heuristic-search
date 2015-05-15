@@ -9,9 +9,12 @@
 #include "priority_queue.hpp"
 #include "heuristics.hpp"
 #include <limits>
+#include <time.h>
 
 #define  MAX_LINE_LENGTH 999 
 Heuristics h;
+FILE *output;
+unsigned long int nodes = 0;
 
 using namespace std;
 
@@ -35,7 +38,9 @@ void bestFirstSearch(state_t *state) {
         priority = pq.CurrentPriority();
 
         currentState = pq.Top();
-        pq.Pop();           
+        pq.Pop();    
+
+        nodes++;       
 
         cost = state_map_get(map,&currentState);
 
@@ -45,7 +50,8 @@ void bestFirstSearch(state_t *state) {
             state_map_add(map,&currentState,priority);
 
             if (is_goal(&currentState)) {
-                cout << "- Goal found with cost: " << priority << endl;
+               
+                fprintf(output, ": - %i %lu ", priority, nodes);
                 destroy_state_map(map);
                 return;
             }           
@@ -70,8 +76,8 @@ void bestFirstSearch(state_t *state) {
 
 int main( int argc, char **argv ) {
 
-    if (argc < 5 ) {
-        cout << "Use: ./<exec>.a <nameStatesFile> <problem> <size> <typeHeuristic>\n";
+    if (argc < 6 ) {
+        cout << "Use: ./<exec>.a <nameStatesFile> <problem> <size> <typeHeuristic> <outputFile>\n";
         cout << "problem: npuzzle / rubiks / topspin / hanoi\n";
         cout << "typeHeuristic:\n";
         cout << "If problem to solve is n-puzzle: manhattan / pdb\n";
@@ -88,13 +94,25 @@ int main( int argc, char **argv ) {
         return 0;
     }
 
+    output = fopen(argv[5],"w");
+    
+    if (output == nullptr) {
+        cout << "Error opening output file.\n";
+        return 0;
+    }
+
     h.initialize(argv);
 
     state_t *state = new state_t;
 
     string line;
 
+    clock_t t;
+    float secs;
+
     while(!fileStates.eof()) {
+
+        nodes = 0;
 
         getline(fileStates,line);
 
@@ -106,14 +124,22 @@ int main( int argc, char **argv ) {
             return 0; 
         }
 
-        cout << "Initial state: ";
-        print_state(stdout,state);
-        
+        print_state(output,state);
     
         int bound = h.getHeuristic(state);
 
+        t = clock();
+
         bestFirstSearch(state);
+    
+        t = clock() - t;
+
+        secs = ((float)t)/CLOCKS_PER_SEC;
+
+        fprintf(output,"%f %f \n",secs,nodes/secs);
     }     
 
     h.destroy();
+    fileStates.close();
+    fclose(output);
 }

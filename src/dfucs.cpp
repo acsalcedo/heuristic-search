@@ -5,8 +5,14 @@
 #include <sys/time.h>
 #include <iostream>
 #include <limits>
+#include <fstream>
+#include <string>
+#include <time.h>
 
 #define  MAX_LINE_LENGTH 999 
+
+FILE *output;
+unsigned long int nodes = 0;
 
 using namespace std;
 
@@ -19,15 +25,14 @@ pair<state_t*, int> boundedDfs(state_t state, int bound, int cost, int hist) {
     if (cost > bound)
         return make_pair(nullptr,cost);
 
-    if (is_goal(&state)) {
-        pair<state_t*, int> p2 = make_pair(&state,cost);
-        print_state(stdout,p2.first);
-        return p2;
-    }
+    if (is_goal(&state))
+        return make_pair(&state,cost);
 
     int t = INT_MAX;
 
     init_fwd_iter(&iter,&state);
+
+    nodes++;
          
     while((ruleid = next_ruleid(&iter)) >= 0) {
         apply_fwd_rule(ruleid,&state, &child);
@@ -45,49 +50,70 @@ pair<state_t*, int> boundedDfs(state_t state, int bound, int cost, int hist) {
         t = min(t,n.second);
     }
     return make_pair(nullptr,t);       
-
 }
 
-int main( int argc, char **argv ) {
+int main(int argc,char **argv) {
 
-    char str[ MAX_LINE_LENGTH +1 ] ;
-    ssize_t nchars; 
-    state_t state; // state_t is defined by the PSVN API. It is the type used for individual states.
+    if (argc < 3) {
+        cout << "Use: ./<exec>.dfucs <nameStatesFile> <outputFile>\n";
+        return 0;
+    }
 
-    state_t child;
-    ruleid_iterator_t iter; // ruleid_terator_t is the type defined by the PSVN API successor/predecessor iterators.
-    int ruleid ; // an iterator returns a number identifying a rule
-    int childCount = 0;
+    ifstream fileStates;
+    fileStates.open(argv[1]);
+
+    if (!fileStates.is_open()) {
+        cout << "Error opening file containing states.\n";
+        return 0;
+    }
+
+    output = fopen(argv[2],"w");
     
-    printf("Please enter a state followed by ENTER: ");
-    if ( fgets(str, sizeof str, stdin) == NULL ) {
-        printf("Error: empty input line.\n");
-        return 0; 
+    if (output == nullptr) {
+        cout << "Error opening output file.\n";
+        return 0;
     }
 
-    nchars = read_state( str, &state );
-    if (nchars <= 0) {
-        printf("Error: invalid state entered.\n");
-        return 0; 
+    state_t *state = new state_t; 
+    string line;
+    
+    clock_t t;
+    float secs;
+    int bound;
+
+    while(!fileStates.eof()) {
+
+        nodes = 0;
+
+        getline(fileStates,line);
+
+        if (line == "")
+            continue;
+
+        if (read_state(line.c_str(),state) <= 0) {
+            printf("Error: invalid state entered.\n");
+            return 0; 
+        }
+
+        bound = 0;
+        pair<state_t*, int> p;
+
+        t = clock();
+
+        while (true) {
+
+           p = boundedDfs(*state,bound,0,init_history);
+
+           if (p.first != nullptr)
+               break;
+
+           bound = p.second;           
+        }
+
+        t = clock() - t;
+
+        print_state(output,state);
+        secs = ((float)t)/CLOCKS_PER_SEC;
+        fprintf(output, ": - %i %lu %f %f \n",p.second,nodes,secs,nodes/secs);
     }
-   
-    printf("The state you entered is: ");
-    print_state(stdout, &state);
-    printf("\n");
-
-    int bound = 0;
-
-    while (true) {
-
-       pair<state_t*, int> p = boundedDfs(state,bound,0,init_history);
-
-       if (p.first != nullptr) {
-           cout << "Cost: " << p.second << "\n";
-           return p.second;
-       }
-
-       bound = p.second;
-       
-    }
-
 }
