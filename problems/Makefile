@@ -10,7 +10,7 @@ EXTRA = extra/
 OPT = -g -Wall -O3 -Wno-unused-function -Wno-unused-variable -std=c++11
 PSVNOPT =  --state_map --history_len=1
 PROB = 0
-ROUTE = 0
+PDB = 0
 ALG = 0
 SIZE = 0
 
@@ -104,9 +104,13 @@ ifeq ($(SIZE),4)
 			make $(NPUZZLE)n-puzzle4x4.$(ALG)
 ifneq (,$(filter ida a,$(ALG)))
 	make abstractor
+
+ifeq ($(PDB),1)
 	make pdb ss=$(NPUZZLE)n-puzzle4x4 absname=abs1 < ../abstractions/n-puzzle4x4/weak/abstraction1.txt
 	make pdb ss=$(NPUZZLE)n-puzzle4x4 absname=abs2 < ../abstractions/n-puzzle4x4/weak/abstraction2.txt
 	make pdb ss=$(NPUZZLE)n-puzzle4x4 absname=abs3 < ../abstractions/n-puzzle4x4/weak/abstraction3.txt
+endif
+
 endif
 
 ## npuzzle tamaño 5x5
@@ -157,9 +161,10 @@ ifeq ($(SIZE),3)
 			make $(RUBIKS)rubikscube3x3.$(ALG)
 ifneq (,$(filter ida a,$(ALG)))
 	make abstractor
+ifeq ($(PDB),1)
 	make pdb ss=$(RUBIKS)rubikscube3x3 absname=abs1 < ../abstractions/rubikscube3x3/corners/abstraction1.txt
 	make pdb ss=$(RUBIKS)rubikscube3x3 absname=abs2 < ../abstractions/rubikscube3x3/edges/abstraction1.txt
-	
+endif
 endif
 
 ## rubiks cube tamaño 2x2x2
@@ -200,25 +205,49 @@ ifeq ($(SIZE),0)
 else 
 
 ## hanoi tamaño incorrecto
-ifeq (,$(filter 12 14 16 17,$(SIZE)))
+ifeq (,$(filter 12 14 16 18,$(SIZE)))
 	@echo "El tamaño ingresado no es correcto"
 
 ##
 else
-## rubiks cube tamaño 3x3x3
+## Hanoi tamaño 12
 ifeq ($(SIZE),12)
 			make $(HANOI)towersofhanoi4-12.$(ALG)
 ifneq (,$(filter ida a,$(ALG)))
 	make abstractor
+ifeq ($(PDB),1)
 	make pdb ss=$(HANOI)towersofhanoi4-12 absname=abs1 < ../abstractions/hanoitowers4-12/abstraction1.txt
-	
+endif
 endif
 
-## rubiks cube tamaño 2x2x2
+## Hanoi tamaño 14
 else ifeq ($(SIZE),14)
-			make $(HANOI)towersofhanoi4-12.$(ALG)
+			make $(HANOI)towersofhanoi4-14.$(ALG)
 ifneq (,$(filter ida a,$(ALG)))
 	make abstractor
+ifeq ($(PDB),1)
+	make pdb ss=$(HANOI)towersofhanoi4-14 absname=abs1 < ../abstractions/hanoitowers4-14/abstraction1.txt
+endif
+endif
+
+## Hanoi tamaño 16
+else ifeq ($(SIZE),16)
+			make $(HANOI)towersofhanoi4-16.$(ALG)
+ifneq (,$(filter ida a,$(ALG)))
+	make abstractor
+ifeq ($(PDB),1)
+	make pdb ss=$(HANOI)towersofhanoi4-16 absname=abs1 < ../abstractions/hanoitowers4-16/abstraction1.txt
+endif
+endif
+
+## Hanoi tamaño 18
+else ifeq ($(SIZE),18)
+			make $(HANOI)towersofhanoi4-18.$(ALG)
+ifneq (,$(filter ida a,$(ALG)))
+	make abstractor
+ifeq ($(PDB),1)
+	make pdb ss=$(HANOI)towersofhanoi4-18 absname=abs1 < ../abstractions/hanoitowers4-18/abstraction1.txt
+endif
 endif
 
 endif
