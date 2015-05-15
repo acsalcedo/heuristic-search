@@ -141,7 +141,18 @@ depth 3: 5832 18
 depth 4: 104976 18
 depth 5: 1889568 18
 
+rubikscube3x3 - SearchTree - Sin duplicados
 
+depth 0: 1 18
+depth 1: 18 13.5
+depth 2: 243 13.3333
+depth 3: 3240 13.35
+depth 4: 43254 13.3483
+depth 5: 577368 13.3485
+depth 6: 7706988 13.3485
+
+
+TOP SPIN ---------------------------------------------------------------------
 topspin12-4 - SearchTree - Con duplicados - Goal: 0 1 2 3 4 5 6 7 8 9 10 11 
 
 depth 0: 1 12
