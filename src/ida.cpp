@@ -114,7 +114,7 @@ int main(int argc,char **argv) {
         }
 
         int bound = h.getHeuristic(state);
-        float secs;
+        float secs, nodesSecs;
 
         pair<state_t*,int> p;
 
@@ -134,10 +134,16 @@ int main(int argc,char **argv) {
         
         print_state(output,state);
         secs = ((float)t)/CLOCKS_PER_SEC;
-        fprintf(output, ": - %i %lu %f %f \n",p.second,nodes,secs,nodes/secs);
-    }
 
-    h.destroy();
+        if (secs == 0)
+            nodesSecs = 0;
+        else
+            nodesSecs = nodes/secs;
+
+        fprintf(output, ": - %i %lu %f %f \n",p.second,nodes,secs,nodesSecs);
+     }
+
+    //h.destroy();
     fileStates.close(); 
     fclose(output);
 }
