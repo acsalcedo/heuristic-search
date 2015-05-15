@@ -36,6 +36,9 @@ public:
 
 	int initialize(char **argv){
 
+	    problem = argv[2];
+	    size = atoi(argv[3]);
+
 	    if (strcmp(argv[4],"manhattan") != 0) {
 	        
 	        FILE *file;
@@ -120,8 +123,6 @@ public:
 			} 			 
 	    }
 
-	    problem = argv[2];
-	    size = atoi(argv[3]);
 	    return 1;
 	};
 
@@ -217,7 +218,15 @@ public:
 	};
 
 	int getHeuristicTopspin(state_t *state) {
-		return 0;
+
+		state_t *stateAbst = new state_t;
+    
+        abstract_state(abs1, state, stateAbst);
+        int heuristic = *state_map_get(map1,stateAbst);
+
+        free(stateAbst);
+
+		return heuristic;
 	};
 
 	int getHeuristicRubiks(state_t *state) {

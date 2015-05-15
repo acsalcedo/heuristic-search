@@ -62,7 +62,7 @@ void bestFirstSearch(state_t *state) {
 
                 apply_fwd_rule(ruleid,&currentState,&child);
 
-                if (h.getHeuristicNpuzzle(&child) < UINT_MAX) {                
+                if (h.getHeuristic(&child) < UINT_MAX) {                
                     childCost = priority + get_fwd_rule_cost(ruleid);
                     state_map_add(map,&child,childCost);
                     pq.Add(childCost,childCost,child);
@@ -81,8 +81,7 @@ int main( int argc, char **argv ) {
         cout << "problem: npuzzle / rubiks / topspin / hanoi\n";
         cout << "typeHeuristic:\n";
         cout << "If problem to solve is n-puzzle: manhattan / pdb\n";
-        cout << "If problem to solve is rubik's cube: corner / edge\n";
-        cout << "If problem is hanoi or topspin, there is no fifth argument.\n";
+        cout << "If problem is hanoi, rubik's cube or topspin: pdb.\n";
         return 0;
     }
     
@@ -144,7 +143,7 @@ int main( int argc, char **argv ) {
         fprintf(output,"%f %f \n",secs,nodesSecs);
     }     
 
-    h.destroy();
+   // h.destroy();
     fileStates.close();
     fclose(output);
 }
