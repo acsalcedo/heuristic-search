@@ -46,6 +46,7 @@ void bestFirstSearch(state_t *state) {
 
             if (is_goal(&currentState)) {
                 cout << "- Goal found with cost: " << priority << endl;
+                destroy_state_map(map);
                 return;
             }           
 
@@ -63,6 +64,7 @@ void bestFirstSearch(state_t *state) {
             }           
         }
     }
+    destroy_state_map(map);
     cout << "No goal found.\n";
 }
 
@@ -110,6 +112,8 @@ int main( int argc, char **argv ) {
     
         int bound = h.getHeuristic(state);
 
-        bestFirstSearch(state);      
+        bestFirstSearch(state);
     }     
+
+    h.destroy();
 }

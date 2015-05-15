@@ -123,6 +123,22 @@ public:
 	    return 1;
 	};
 
+	void destroy() {
+
+		if (!manhattan) {
+			destroy_state_map(map1);
+
+			if (strcmp(problem,"npuzzle")) {
+				
+				destroy_state_map(map2);
+				destroy_state_map(map3);
+			
+			} else if (strcmp(problem,"rubiks")) {
+				destroy_state_map(map2);
+			} 
+		}
+	};
+
 	int getRow(int pos) {
 
 		if (size == 4)

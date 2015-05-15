@@ -123,5 +123,7 @@ int main(int argc,char **argv) {
             bound = p.second;            
         }
     }
+
+    h.destroy();
     fileStates.close(); 
 }
