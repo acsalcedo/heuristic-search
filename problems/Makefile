@@ -97,6 +97,8 @@ ifeq ($(SIZE),4)
 ifneq (,$(filter ida a,$(ALG)))
 	make abstractor
 	make pdb ss=$(NPUZZLE)n-puzzle4x4 absname=abs1 < ../abstractions/n-puzzle4x4/weak/abstraction1.txt
+	make pdb ss=$(NPUZZLE)n-puzzle4x4 absname=abs2 < ../abstractions/n-puzzle4x4/weak/abstraction2.txt
+	make pdb ss=$(NPUZZLE)n-puzzle4x4 absname=abs3 < ../abstractions/n-puzzle4x4/weak/abstraction3.txt
 endif
 
 ## npuzzle tamaño 5x5
@@ -136,19 +138,35 @@ ifeq ($(SIZE),0)
 ## Se ingreso tamaño
 else 
 
-## rubiks cube tamaño 2x2x2
-ifeq ($(SIZE),2)
-			make $(RUBIKS)rubikscube2x2.$(ALG)
-
-## rubiks cube tamaño 3x3x3
-else ifeq ($(SIZE),3)
-			make $(RUBIKS)rubikscube3x3.$(ALG)
-
-## rubiks cube tamaño incorrecto
-else
+## rubiks tamaño incorrecto
+ifeq (,$(filter 2 3,$(SIZE)))
 	@echo "El tamaño ingresado no es correcto"
+
+##
+else
+## rubiks cube tamaño 3x3x3
+ifeq ($(SIZE),3)
+			make $(RUBIKS)rubikscube3x3.$(ALG)
+ifneq (,$(filter ida a,$(ALG)))
+	make abstractor
+	make pdb ss=$(RUBIKS)rubikscube3x3 absname=abs1 < ../abstractions/rubikscube3x3/corners/abstraction1.txt
+	make pdb ss=$(RUBIKS)rubikscube3x3 absname=abs2 < ../abstractions/rubikscube3x3/edges/abstraction1.txt
+	
 endif
-## endif tamaño del rubiks cube
+
+## rubiks cube tamaño 2x2x2
+else ifeq ($(SIZE),2)
+			make $(RUBIKS)rubikscube2x2.$(ALG)
+ifneq (,$(filter ida a,$(ALG)))
+	make abstractor
+endif
+
+endif
+##
+
+
+endif
+## endif tamaño del npuzzle
 
 endif
 ## endif tamaño ----------------------------
