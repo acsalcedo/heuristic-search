@@ -74,7 +74,95 @@ all:
 # endif
 # ###endif problema  ############################################################
 
-	
+problems:
+	make $(NPUZZLE)n-puzzle4x4.st
+	make $(NPUZZLE)n-puzzle4x4.bfs
+	make $(NPUZZLE)n-puzzle4x4.ucs
+	make $(NPUZZLE)n-puzzle4x4.dfid
+	make $(NPUZZLE)n-puzzle4x4.dfucs
+	make $(NPUZZLE)n-puzzle4x4.a
+	make $(NPUZZLE)n-puzzle4x4.ida
+	make $(NPUZZLE)n-puzzle5x5.st
+	make $(NPUZZLE)n-puzzle5x5.bfs
+	make $(NPUZZLE)n-puzzle5x5.ucs
+	make $(NPUZZLE)n-puzzle5x5.dfid
+	make $(NPUZZLE)n-puzzle5x5.dfucs
+	make $(NPUZZLE)n-puzzle5x5.a
+	make $(NPUZZLE)n-puzzle5x5.ida
+
+	make $(RUBIKS)rubikscube2x2.st
+	make $(RUBIKS)rubikscube2x2.bfs
+	make $(RUBIKS)rubikscube2x2.ucs
+	make $(RUBIKS)rubikscube2x2.dfid
+	make $(RUBIKS)rubikscube2x2.dfucs
+	make $(RUBIKS)rubikscube2x2.a
+	make $(RUBIKS)rubikscube2x2.ida
+	make $(RUBIKS)rubikscube3x3.st
+	make $(RUBIKS)rubikscube3x3.bfs
+	make $(RUBIKS)rubikscube3x3.ucs
+	make $(RUBIKS)rubikscube3x3.dfid
+	make $(RUBIKS)rubikscube3x3.dfucs
+	make $(RUBIKS)rubikscube3x3.a
+	make $(RUBIKS)rubikscube3x3.ida
+
+	make $(HANOI)towersofhanoi4-12.st
+	make $(HANOI)towersofhanoi4-12.bfs
+	make $(HANOI)towersofhanoi4-12.ucs
+	make $(HANOI)towersofhanoi4-12.dfid
+	make $(HANOI)towersofhanoi4-12.dfucs
+	make $(HANOI)towersofhanoi4-12.a
+	make $(HANOI)towersofhanoi4-12.ida
+	make $(HANOI)towersofhanoi4-14.st
+	make $(HANOI)towersofhanoi4-14.bfs
+	make $(HANOI)towersofhanoi4-14.ucs
+	make $(HANOI)towersofhanoi4-14.dfid
+	make $(HANOI)towersofhanoi4-14.dfucs
+	make $(HANOI)towersofhanoi4-14.a
+	make $(HANOI)towersofhanoi4-14.ida
+	make $(HANOI)towersofhanoi4-16.st
+	make $(HANOI)towersofhanoi4-16.bfs
+	make $(HANOI)towersofhanoi4-16.ucs
+	make $(HANOI)towersofhanoi4-16.dfid
+	make $(HANOI)towersofhanoi4-16.dfucs
+	make $(HANOI)towersofhanoi4-16.a
+	make $(HANOI)towersofhanoi4-16.ida
+	make $(HANOI)towersofhanoi4-18.st
+	make $(HANOI)towersofhanoi4-18.bfs
+	make $(HANOI)towersofhanoi4-18.ucs
+	make $(HANOI)towersofhanoi4-18.dfid
+	make $(HANOI)towersofhanoi4-18.dfucs
+	make $(HANOI)towersofhanoi4-18.a
+	make $(HANOI)towersofhanoi4-18.ida
+
+	make $(TOPSPIN)topspin12-4.st
+	make $(TOPSPIN)topspin12-4.bfs
+	make $(TOPSPIN)topspin12-4.ucs
+	make $(TOPSPIN)topspin12-4.dfid
+	make $(TOPSPIN)topspin12-4.dfucs
+	make $(TOPSPIN)topspin12-4.a
+	make $(TOPSPIN)topspin12-4.ida
+	make $(TOPSPIN)topspin14-4.st
+	make $(TOPSPIN)topspin14-4.bfs
+	make $(TOPSPIN)topspin14-4.ucs
+	make $(TOPSPIN)topspin14-4.dfid
+	make $(TOPSPIN)topspin14-4.dfucs
+	make $(TOPSPIN)topspin14-4.a
+	make $(TOPSPIN)topspin14-4.ida
+	make $(TOPSPIN)topspin16-4.st
+	make $(TOPSPIN)topspin16-4.bfs
+	make $(TOPSPIN)topspin16-4.ucs
+	make $(TOPSPIN)topspin16-4.dfid
+	make $(TOPSPIN)topspin16-4.dfucs
+	make $(TOPSPIN)topspin16-4.a
+	make $(TOPSPIN)topspin16-4.ida
+	make $(TOPSPIN)topspin17-4.st
+	make $(TOPSPIN)topspin17-4.bfs
+	make $(TOPSPIN)topspin17-4.ucs
+	make $(TOPSPIN)topspin17-4.dfid
+	make $(TOPSPIN)topspin17-4.dfucs
+	make $(TOPSPIN)topspin17-4.a
+	make $(TOPSPIN)topspin17-4.ida
+
 
 npuzzle:
 # Si no se ingreso ningun algoritmo *******************
@@ -266,7 +354,7 @@ endif
 topspin:
 ifeq ($(ALG),0)
 		@echo "Ingrese el algoritmo que usará para resolver el problema"
-		@echo "Opciones posibles: ALG= st /bfs /ucs / ida / a / dfid / dfucs"
+		@echo "Opciones posibles: ALG= st |bfs |ucs | ida | a | dfid | dfucs"
 
 ## Se ingreso algoritmo
 else
@@ -274,34 +362,66 @@ else
 
 ## Si no se ingreso un tamaño -----------
 ifeq ($(SIZE),0)
-			@echo "Ingrese el tamaño que usará para el problema TopSpin"
-
+			@echo "Ingrese el tamaño que usará para el problema Torres de Hanoi"
+			@echo "SIZE=12 (4p 12d)| 14 (4p 14d)|16 (4p 16d)| 18(4p 18d)"
 ## Se ingreso tamaño
 else 
 
-## TopSpin 12
+## hanoi tamaño incorrecto
+ifeq (,$(filter 12 14 16 17,$(SIZE)))
+	@echo "El tamaño ingresado no es correcto"
+
+##
+else
+## Hanoi tamaño 12
 ifeq ($(SIZE),12)
 			make $(TOPSPIN)topspin12-4.$(ALG)
+ifneq (,$(filter ida a,$(ALG)))
+	make abstractor
+ifeq ($(PDB),1)
+	make pdb ss=$(TOPSPIN)topspin12-4 absname=abs1 < ../abstractions/topspin12-4/abstraction1.txt
+endif
+endif
 
-## TopSpin 14
+## Hanoi tamaño 14
 else ifeq ($(SIZE),14)
 			make $(TOPSPIN)topspin14-4.$(ALG)
+ifneq (,$(filter ida a,$(ALG)))
+	make abstractor
+ifeq ($(PDB),1)
+	make pdb ss=$(TOPSPIN)topspin14-4 absname=abs1 < ../abstractions/topspin14-4/abstraction1.txt
+endif
+endif
 
+## Hanoi tamaño 16
 else ifeq ($(SIZE),16)
 			make $(TOPSPIN)topspin16-4.$(ALG)
+ifneq (,$(filter ida a,$(ALG)))
+	make abstractor
+ifeq ($(PDB),1)
+	make pdb ss=$(TOPSPIN)topspin16-4 absname=abs1 < ../abstractions/topspin16-4/abstraction1.txt
+endif
+endif
 
+## Hanoi tamaño 18
 else ifeq ($(SIZE),17)
 			make $(TOPSPIN)topspin17-4.$(ALG)
-
-## rubiks cube tamaño incorrecto
-else
-	@echo "El tamaño ingresado no es correcto"
+ifneq (,$(filter ida a,$(ALG)))
+	make abstractor
+ifeq ($(PDB),1)
+	make pdb ss=$(TOPSPIN)topspin17-4 absname=abs1 < ../abstractions/topspin17-4/abstraction1.txt
 endif
-## endif tamaño del rubiks cube
+endif
+
+endif
+##
+
+
+endif
+## endif tamaño del npuzzle
 
 endif
 ## endif tamaño ----------------------------
-
 endif
 ## endif algoritmo ***********************************
 

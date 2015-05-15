@@ -1,15 +1,15 @@
 # heuristic-search
 Proyecto 1 de búsqueda heurística para Inteligencia Artificial 1
 
-### Integrantes:    ###
+### INTEGRANTES    	#######
 Rivas Vanessa
 Salcedo Andrea
 Verdugo Reinaldo
 
-### Objetivo      ###
+### OBJETIVO    	#######
 El objetivo del proyecto es aprender sobre el modelo de espacio  de  estados  y  sobre  los  diferentes algoritmos  de  búsqueda  heurística.
 
-### Estructura    ###
+### ESTRUCTURA    	#######
 Los archivos están estructurados de la siguiente manera:
 
 ** psvn 			  
@@ -33,3 +33,6 @@ Donde se encuentran implementados los algoritmos de búsqueda utilizados para es
 
 **abstractions
 Contiene las abstracciones de los problemas relajados para crear heurísticas que utilizan bases de datos de patrones (PDB)
+
+
+### CORRIDA 			#######
