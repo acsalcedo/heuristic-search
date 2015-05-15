@@ -182,7 +182,7 @@ endif
 endif
 ## endif algoritmo ***********************************
 
-hanoist:
+hanoi:
 # Si no se ingreso ningun algoritmo *******************
 ifeq ($(ALG),0)
 		@echo "Ingrese el algoritmo que usará para resolver el problema"
@@ -199,25 +199,34 @@ ifeq ($(SIZE),0)
 ## Se ingreso tamaño
 else 
 
-## Torres de Hanoi
+## hanoi tamaño incorrecto
+ifeq (,$(filter 12 14 16 17,$(SIZE)))
+	@echo "El tamaño ingresado no es correcto"
+
+##
+else
+## rubiks cube tamaño 3x3x3
 ifeq ($(SIZE),12)
 			make $(HANOI)towersofhanoi4-12.$(ALG)
-
-## rubiks cube tamaño 3x3x3
-else ifeq ($(SIZE),14)
-			make $(HANOI)towersofhanoi4-14.$(ALG)
-
-else ifeq ($(SIZE),16)
-			make $(HANOI)towersofhanoi4-16.$(ALG)
-
-else ifeq ($(SIZE),18)
-			make $(HANOI)towersofhanoi4-18.$(ALG)
-
-## rubiks cube tamaño incorrecto
-else
-	@echo "El tamaño ingresado no es correcto"
+ifneq (,$(filter ida a,$(ALG)))
+	make abstractor
+	make pdb ss=$(HANOI)towersofhanoi4-12 absname=abs1 < ../abstractions/hanoitowers4-12/abstraction1.txt
+	
 endif
-## endif tamaño del rubiks cube
+
+## rubiks cube tamaño 2x2x2
+else ifeq ($(SIZE),14)
+			make $(HANOI)towersofhanoi4-12.$(ALG)
+ifneq (,$(filter ida a,$(ALG)))
+	make abstractor
+endif
+
+endif
+##
+
+
+endif
+## endif tamaño del npuzzle
 
 endif
 ## endif tamaño ----------------------------
