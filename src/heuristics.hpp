@@ -94,6 +94,7 @@ public:
 	                return 0;
 	            }
 	        }
+
 	    } else {
 	
 			int i;
@@ -106,6 +107,7 @@ public:
 					arr4x4row[i] = div(i,4).quot;
 					arr4x4column[i] = i % 4;
 				}
+				
 			} else {
 
 				for(i = 0; i < 25; i++) {
@@ -162,6 +164,7 @@ public:
 		 		manhattan = abs(x - getRow(num)) + abs(y - getColumn(num));  		
 		  		heuristic = heuristic + manhattan;
 		  	}
+
 		    return heuristic;
 		
 		} else {
@@ -177,7 +180,7 @@ public:
 	        abstract_state(abs3, state, stateAbst);
 	        heuristic += *state_map_get(map3,stateAbst);
 
-	        //free(stateAbst);
+	        free(stateAbst);
     
     		return heuristic;
 		}
@@ -185,15 +188,15 @@ public:
 
 	int getHeuristicHanoi(state_t *state) {
 		return 0;
-	}
+	};
 
 	int getHeuristicTopspin(state_t *state) {
 		return 0;
-	}
+	};
 
 	int getHeuristicRubiks(state_t *state) {
-		return 0;
-	}
+		return 0; // max abs1 abs2
+	};
 
 	int getHeuristic(state_t *state) {
 
@@ -211,8 +214,5 @@ public:
 		}
 
 		return -1;
-	}
-
-
-
+	};
 };
