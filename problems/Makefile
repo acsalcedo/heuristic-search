@@ -13,60 +13,68 @@ PROB = 0
 ROUTE = 0
 ALG = 0
 SIZE = 0
+
 all:
+	@echo ""
+	@echo "Realice make seguido del problema que desea usar, pasando como parámetros el tamaño del problema y el algoritmo a utilizar"
+	@echo "make <problema> ALG=<algoritmo> SIZE=<tamaño>"
+	@echo "problema =npuzzle/rubiks/topspin/hanoi"
+	@echo "algoritmo =st/ucs/ida/a/dfid/dfucs"
+	@echo ""
+# # Si no se ingreso ningun problema  #########################################
+# ifeq ($(PROB),0)
+# 	@echo "Ingrese el problema que desea resolver"
+# 	@echo "Opciones posibles: PROB=npuzzle / hanoi / rubiks / topspin"
 
-# Si no se ingreso ningun problema  #########################################
-ifeq ($(PROB),0)
-	@echo "Ingrese el problema que desea resolver"
-	@echo "Opciones posibles: PROB=npuzzle / hanoi / rubiks / topspin"
+# ## Se ingreso problemas
+# else
 
-## Se ingreso problemas
-else
+# # Si no se ingreso ningun algoritmo *******************
+# ifeq ($(ALG),0)
+# 		@echo "Ingrese el algoritmo que usará para resolver el problema"
+# 		@echo "Opciones posibles: ALG= ucs / ida / a / dfid / dfucs"
 
-# Si no se ingreso ningun algoritmo *******************
-ifeq ($(ALG),0)
-		@echo "Ingrese el algoritmo que usará para resolver el problema"
-		@echo "Opciones posibles: ALG= ucs / ida / a / dfid / dfucs"
-
-## Se ingreso algoritmo
-else
+# ## Se ingreso algoritmo
+# else
 
 
-## Si no se ingreso un tamaño -----------
-ifeq ($(SIZE),0)
-			@echo "Ingrese el tamaño que usará para el problema escogido"
+# ## Si no se ingreso un tamaño -----------
+# ifeq ($(SIZE),0)
+# 			@echo "Ingrese el tamaño que usará para el problema escogido"
 
-## Se ingreso tamaño
-else 
+# ## Se ingreso tamaño
+# else 
 
-## Si el problema escogido fue npuzzle
-ifeq ($(PROB),npuzzle)
+# ## Si el problema escogido fue npuzzle
+# ifeq ($(PROB),npuzzle)
 
-## npuzzle tamaño 4x4
-ifeq ($(SIZE),4)
-			make $(NPUZZLE)n-puzzle4x4.$(ALG)
+# ## npuzzle tamaño 4x4
+# ifeq ($(SIZE),4)
+# 			make $(NPUZZLE)n-puzzle4x4.$(ALG)
 
-## npuzzle tamaño 5x5
-else ifeq ($(SIZE),5)
-			make $(NPUZZLE)n-puzzle5x5.$(ALG)
+# ## npuzzle tamaño 5x5
+# else ifeq ($(SIZE),5)
+# 			make $(NPUZZLE)n-puzzle5x5.$(ALG)
 
-## npuzzle tamaño incorrecto
-else
-	@echo "El tamaño ingresado no es correcto"
-endif
-## endif tamaño del npuzzle
+# ## npuzzle tamaño incorrecto
+# else
+# 	@echo "El tamaño ingresado no es correcto"
+# endif
+# ## endif tamaño del npuzzle
 
-endif
-## endif npuzzle 
+# endif
+# ## endif npuzzle 
 
-endif
-## endif tamaño ----------------------------
+# endif
+# ## endif tamaño ----------------------------
 
-endif
-## endif algoritmo ***********************************
+# endif
+# ## endif algoritmo ***********************************
 
-endif
-###endif problema  ############################################################
+# endif
+# ###endif problema  ############################################################
+
+	
 
 npuzzle:
 # Si no se ingreso ningun algoritmo *******************

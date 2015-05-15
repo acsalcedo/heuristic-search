@@ -9,7 +9,7 @@
 #define  MAX_LINE_LENGTH 999 
 using namespace std;
 
-void boundeddfs(state_t state, unsigned int bound, unsigned int limit, unsigned int &number, int hist, int prunning) {
+void boundeddfs(state_t state, unsigned int bound, unsigned int limit, unsigned int &number, int hist, char **prunning) {
    state_t child;
    ruleid_iterator_t iter;
    int ruleid;
@@ -19,8 +19,10 @@ void boundeddfs(state_t state, unsigned int bound, unsigned int limit, unsigned 
       init_fwd_iter(&iter, &state);
       while((ruleid = next_ruleid(&iter)) >= 0) {
          apply_fwd_rule(ruleid, &state, &child);
-         if (!fwd_rule_valid_for_history(hist,ruleid) && (prunning))
-              continue;
+         if (!fwd_rule_valid_for_history(hist,ruleid))
+            if (prunning[1]!=NULL)
+               if (atoi(prunning[1]))
+                  continue;
          boundeddfs(child, bound+1, limit, number, next_fwd_history(hist,ruleid), prunning);
       }
 
@@ -28,7 +30,7 @@ void boundeddfs(state_t state, unsigned int bound, unsigned int limit, unsigned 
 }
 
 
-void iterativeddfs(int prunning) {
+void iterativeddfs(char **prunning) {
    state_t state;
    unsigned int i;
    first_goal_state(&state,&i);
@@ -41,7 +43,7 @@ void iterativeddfs(int prunning) {
       if (limit > 0)
          cout << (float) numberOfNodes / previously << endl;
 
-      std::cout << limit << " " << numberOfNodes << " ";
+      std::cout <<"depth " << limit << ": " << numberOfNodes << " ";
       previously = numberOfNodes;
       
       limit++;
@@ -51,7 +53,9 @@ void iterativeddfs(int prunning) {
 
 
 int main( int argc, char **argv ) {
-   int i = atoi(argv[1]);
+   int i = 0;
+   if (argv[1] != NULL)
+      i = atoi(argv[1]);
    cout << i << endl;
-   iterativeddfs(i);
+   iterativeddfs(argv);
 } // end main
