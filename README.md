@@ -3,9 +3,8 @@ Proyecto 1 de búsqueda heurística para Inteligencia Artificial 1 - Abril - Jul
 
 ### INTEGRANTES    	###############################################################
 
-Rivas Vanessa		10-10602
-Salcedo Andrea		10-10666
-Verdugo Reinaldo	10-10757
+1. Andrea Salcedo	10-10666
+2. Reinaldo Verdugo	10-10757
 
 ### OBJETIVO    	###############################################################
 
